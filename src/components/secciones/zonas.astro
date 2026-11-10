@@ -1,0 +1,36 @@
+---
+// Dónde instalamos: cabeza (título y `texto` con el radio de trabajo) y los pueblos (`items: [{titulo, texto}]`) en
+// celdas encerradas por filetes de 3 px, el nombre en mayúsculas de Jost. Cada zona con `texto` tiene su propia página
+// (/zonas/<slug>/, src/pages/zonas/[slug].astro) y su celda la enlaza. En la sección: `titulo_pagina`
+// («Carpintería metálica en {zona}») y `texto_pagina` (entrada común de esas páginas, con {zona} y {negocio}).
+import { seccion, letras } from '../../data/site';
+import { enlaceDe } from '../../lib/paginas';
+import Banda from '../ui/Banda.astro';
+import Titular from '../ui/Titular.astro';
+interface Props { id: string }
+const s = seccion(Astro.props.id);
+const zonas = (s?.items ?? []).filter((it) => it?.titulo);
+---
+
+{
+  s && (s.titulo || s.antetitulo || s.texto || zonas.length > 0) && (
+    <Banda id={Astro.props.id} color="papel2">
+      <Titular antetitulo={s.antetitulo} titulo={s.titulo} texto={s.texto} />
+      {zonas.length > 0 && (
+        <ul class="zonas celdas">
+          {zonas.map((z) => {
+            const url = enlaceDe(z);
+            return (
+              <li class="ajuste">
+                <h3 class="zona-nombre encaja" style={`--letras:${letras(z.titulo)}`}>
+                  {url ? <a href={url}>{z.titulo}</a> : z.titulo}
+                </h3>
+                {url && <a class="zona-ver enlace" href={url} aria-hidden="true" tabindex="-1">Qué hacemos aquí</a>}
+              </li>
+            );
+          })}
+        </ul>
+      )}
+    </Banda>
+  )
+}

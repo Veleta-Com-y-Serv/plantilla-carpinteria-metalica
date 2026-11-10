@@ -1,0 +1,31 @@
+---
+// Opiniones: `testimonios: [{texto, autor, nota}]` en celdas encerradas por filetes de 3 px, la frase en Karla y quién
+// lo dice abajo (`nota`: el trabajo y el pueblo). Sin opiniones no se pinta. No se inventan: solo las que da el cliente.
+import { seccion } from '../../data/site';
+import Banda from '../ui/Banda.astro';
+import Titular from '../ui/Titular.astro';
+interface Props { id: string }
+const s = seccion(Astro.props.id);
+const lista = (s?.testimonios ?? []).filter((t) => t?.texto);
+---
+
+{
+  s && lista.length > 0 && (
+    <Banda id={Astro.props.id} color="papel">
+      <Titular antetitulo={s.antetitulo} titulo={s.titulo} texto={s.texto} />
+      <ul class="opiniones celdas" style={`--n:${Math.min(lista.length, 3)}`}>
+        {lista.map((t) => (
+          <li>
+            <blockquote class="opinion-texto">{t.texto}</blockquote>
+            {(t.autor || t.nota) && (
+              <p class="opinion-autor menuda">
+                {t.autor && <strong>{t.autor}</strong>}
+                {t.nota}
+              </p>
+            )}
+          </li>
+        ))}
+      </ul>
+    </Banda>
+  )
+}

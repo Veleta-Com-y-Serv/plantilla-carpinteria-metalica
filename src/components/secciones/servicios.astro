@@ -1,0 +1,59 @@
+---
+// Qué hacemos: índice a todo el ancho, en banda de papel 2, como una tabla con filetes (filete de 3 px arriba, finos
+// entre filas). Cada elemento de `items` ({titulo, texto, categoria, precio, detalle, imagenes}) es una fila: nombre en
+// mayúsculas de Jost (enlazado a su página si tiene `detalle`), texto, su taller con la muestra de color (si
+// `categoria` coincide con un taller de la sección `talleres`) y el precio tal cual («Desde 290 €», «Consultar»).
+// Sin precio no hay precio; sin categoría, no hay muestra. Sus títulos son las opciones de «Tipo de trabajo» del
+// formulario de presupuesto. Opcional `cta` debajo.
+import { seccion, letras, colorDe } from '../../data/site';
+import { enlaceDe } from '../../lib/paginas';
+import Banda from '../ui/Banda.astro';
+import Titular from '../ui/Titular.astro';
+interface Props { id: string }
+const s = seccion(Astro.props.id);
+const items = (s?.items ?? []).filter((it) => it?.titulo);
+const hayCat = items.some((it) => it.categoria);
+const hayPrecio = items.some((it) => it.precio);
+---
+
+{
+  s && (s.titulo || s.antetitulo || s.texto || items.length > 0) && (
+    <Banda id={Astro.props.id} color="papel2">
+      <Titular antetitulo={s.antetitulo} titulo={s.titulo} texto={s.texto} />
+      {items.length > 0 && (
+        <ul class="indice">
+          {items.map((it) => {
+            const url = enlaceDe(it);
+            const n = colorDe(it.categoria);
+            return (
+              <li class="indice-fila">
+                <h3 class="indice-titulo encaja" style={`--letras:${letras(it.titulo)}`}>
+                  {url ? <a href={url}>{it.titulo}</a> : it.titulo}
+                </h3>
+                <p class="indice-texto">{it.texto}</p>
+                {(hayCat || hayPrecio) && (
+                  <>
+                    <p class="indice-cat">
+                      {it.categoria && (
+                        <>
+                          <span class:list={['muestra', { [`cat-${n}`]: n > 0 }]} aria-hidden="true" />
+                          {it.categoria}
+                        </>
+                      )}
+                    </p>
+                    <p class="indice-precio">{it.precio}</p>
+                  </>
+                )}
+              </li>
+            );
+          })}
+        </ul>
+      )}
+      {s.cta && (
+        <p class="botones">
+          <a class="btn" href={s.cta.url}>{s.cta.texto}</a>
+        </p>
+      )}
+    </Banda>
+  )
+}

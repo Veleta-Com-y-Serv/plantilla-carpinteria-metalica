@@ -1,0 +1,150 @@
+---
+// Página de una zona con `texto` (src/lib/paginas.ts, sección `zonas`): /zonas/<slug>/.
+// Tema Werkstatt: migas, «Carpintería metálica en <zona>» (`titulo_pagina` de la sección, con {zona}) en mayúsculas de
+// Jost, la entrada (`texto_pagina`, con {zona} y {negocio}) y los botones; la foto enmarcada (la de la zona, la de la
+// sección, la del contacto o la de la portada); el texto propio de la zona; los servicios de la web como índice con su
+// taller; los trabajos cuyo `lugar` nombra la zona; la banda de tinta para pedir medición y las otras zonas en celdas.
+import Base from '../../layouts/Base.astro';
+import Imagen from '../../components/ui/Imagen.astro';
+import Banda from '../../components/ui/Banda.astro';
+import Titular from '../../components/ui/Titular.astro';
+import { seccion, site, tel, whatsapp, letras, colorDe } from '../../data/site';
+import { enlaceDe, introZona, resumen, tituloZona, trabajosEn, zonasConPagina } from '../../lib/paginas';
+import type { Zona } from '../../lib/paginas';
+import { jsonLdMigas, jsonLdZona, urlBase } from '../../lib/seo';
+import { enlace, rutaDeSeccion } from '../../lib/multipagina';
+
+export function getStaticPaths() {
+  return zonasConPagina().map((z) => ({ params: { slug: z.slug }, props: { z } }));
+}
+
+interface Props { z: Zona }
+const { z } = Astro.props;
+const base = urlBase(Astro.site);
+const titulo = tituloZona(z);
+const intro = introZona(z).split('{negocio}').join(site.nombre);
+const nombreSeccion = String(z.seccion.antetitulo || z.seccion.titulo || 'Zonas').trim();
+const migas = [
+  { nombre: 'Inicio', ruta: '/' },
+  { nombre: nombreSeccion, ruta: rutaDeSeccion(z.idSeccion) },
+  { nombre: z.nombre, ruta: z.url },
+];
+const c = site.contacto;
+const foto =
+  z.imagen || String(z.seccion.imagen || '') || String(seccion('contacto')?.imagen || '') || String(seccion('hero')?.imagen || '');
+const servicios = seccion('servicios');
+const listaServicios = servicios ? servicios.items.filter((it) => it?.titulo) : [];
+const trabajos = trabajosEn(z.nombre).slice(0, 3);
+const presupuesto = seccion('presupuesto') ? enlace('/#presupuesto') : site.boton_cabecera?.url || enlace('/#contacto');
+const textoPresupuesto = site.boton_cabecera?.texto || 'Pedir presupuesto';
+const wa = whatsapp(c.whatsapp, `Hola, quiero presupuesto para un trabajo en ${z.nombre}`);
+const otras = zonasConPagina().filter((x) => x !== z);
+const color = (cat?: unknown) => colorDe(cat);
+const preguntaFinal = `¿Tienes un trabajo en ${z.nombre}?`;
+---
+
+<Base titulo={titulo} descripcion={resumen(z.texto[0] ?? intro)} imagen={foto} ld={[jsonLdMigas(base, migas), jsonLdZona(base, z)]}>
+  <section class="portada">
+    <div class="contenedor">
+      <nav aria-label="Migas de pan" class="migas">
+        <ol>
+          {migas.map((m, i) => (
+            <li>{i < migas.length - 1 ? <a href={m.ruta}>{m.nombre}</a> : <span aria-current="page">{m.nombre}</span>}</li>
+          ))}
+        </ol>
+      </nav>
+      <div class:list={['ficha-cabeza', { 'ficha-cabeza--foto': foto }]}>
+        <div class="ajuste">
+          <p class="antetitulo">{z.nombre}</p>
+          <h1 class="ficha-titulo encaja" style={`--letras:${letras(titulo)}`}>{titulo}</h1>
+          {intro && <p class="portada-parrafo">{intro}</p>}
+          <div class="botones">
+            <a class="btn" href={presupuesto}>{textoPresupuesto}</a>
+            {c.telefono && <a class="btn-sec" href={tel(c.telefono)}>Llamar al {c.telefono}</a>}
+          </div>
+        </div>
+        {foto && (
+          <div class="foto marco" style="aspect-ratio:4/3">
+            <Imagen src={foto} alt={titulo} ancho={1200} alto={900} prioridad />
+          </div>
+        )}
+      </div>
+    </div>
+  </section>
+
+  <Banda color="papel2">
+    <div class="zona-texto">
+      {z.texto.map((p) => <p>{p}</p>)}
+    </div>
+  </Banda>
+
+  {listaServicios.length > 0 && (
+    <Banda color="papel">
+      <Titular antetitulo={servicios?.antetitulo} titulo={`Qué hacemos en ${z.nombre}`} />
+      <ul class="indice">
+        {listaServicios.map((it) => (
+          <li class="indice-fila">
+            <h3 class="indice-titulo encaja" style={`--letras:${letras(it.titulo)}`}>
+              {enlaceDe(it) ? <a href={enlaceDe(it)}>{it.titulo}</a> : it.titulo}
+            </h3>
+            <p class="indice-texto">{it.texto}</p>
+            <p class="indice-cat">
+              {it.categoria && <span class={color(it.categoria) > 0 ? `muestra cat-${color(it.categoria)}` : 'muestra'} aria-hidden="true" />}
+              {it.categoria}
+            </p>
+            <p class="indice-precio">{it.precio}</p>
+          </li>
+        ))}
+      </ul>
+    </Banda>
+  )}
+
+  {trabajos.length > 0 && (
+    <Banda color="papel">
+      <Titular antetitulo={seccion('trabajos')?.antetitulo} titulo={`Trabajos en ${z.nombre}`} />
+      <ul class="trabajos">
+        {trabajos.map((t) => (
+          <li class="trabajo marco" style="--col:4;--fil:1">
+            {t.imagen && (
+              <div class="foto foto--color">
+                <Imagen src={String(t.imagen)} alt={String(t.titulo || titulo)} ancho={1000} alto={750} />
+              </div>
+            )}
+            <div class={color(t.categoria) > 0 ? `trabajo-pie ajuste relleno cat-${color(t.categoria)}` : 'trabajo-pie ajuste'}>
+              {t.titulo && <h3 class="trabajo-titulo encaja" style={`--letras:${letras(t.titulo)}`}>{t.titulo}</h3>}
+              {t.texto && <p class="trabajo-texto">{t.texto}</p>}
+            </div>
+          </li>
+        ))}
+      </ul>
+    </Banda>
+  )}
+
+  <Banda color="tinta">
+    <div class="presupuesto-rejilla">
+      <div class="titular">
+        <div class="titulo-caja ajuste">
+          <h2 class="titulo-seccion encaja" style={`--letras:${letras(preguntaFinal)}`}>{preguntaFinal}</h2>
+        </div>
+        <p class="entrada">Vamos a medir sin compromiso y te damos el precio cerrado por escrito.</p>
+      </div>
+      <div class="botones">
+        <a class="btn" href={presupuesto}>{textoPresupuesto}</a>
+        {wa && <a class="btn-sec" href={wa} target="_blank" rel="noopener">WhatsApp</a>}
+      </div>
+    </div>
+  </Banda>
+
+  {otras.length > 0 && (
+    <Banda color="papel">
+      <h2 class="titulo-pequeno">También instalamos en</h2>
+      <ul class="zonas celdas">
+        {otras.map((o) => (
+          <li class="ajuste">
+            <h3 class="zona-nombre encaja" style={`--letras:${letras(o.nombre)}`}><a href={o.url}>{o.nombre}</a></h3>
+          </li>
+        ))}
+      </ul>
+    </Banda>
+  )}
+</Base>

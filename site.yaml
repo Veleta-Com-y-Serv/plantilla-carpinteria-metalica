@@ -1,0 +1,220 @@
+# Contenido de la web. Es lo único que rellena la plataforma NoExpertise.
+# Una sola página: el menú apunta a anclas (#id-de-sección).
+# Las secciones se muestran en el orden de este fichero. Para ocultar una: activa: false.
+# Apartado nuevo: un id propio (es su ancla, /#id) con `tipo:` = el diseño de otra sección o `texto`.
+# Listas planas: nunca una lista dentro de un elemento de lista. Precios y cifras, siempre entre comillas.
+nombre: Talleres Guadalope
+eslogan: Aluminio, PVC, cristal y forja a medida en Alcañiz y el Bajo Aragón. Medimos, fabricamos e instalamos.
+sector: carpinteria-metalica
+logo: ""          # ruta a una imagen en public/ (p. ej. /logo.svg). Vacío = nombre en texto.
+colores:
+  primario: "#1949c5"   # azul: primer taller y banda de presupuesto
+  acento: "#c52a10"     # bermellón: segundo taller (el amarillo del tercero sale de este)
+  fondo: "#d2c9b9"      # papel masilla
+  texto: "#14110e"      # tinta: letra, botones y banda oscura
+contacto:
+  telefono: "978 000 000"
+  email: presupuestos@talleresguadalope.es
+  direccion: Polígono Las Horcas, nave 14, 44600 Alcañiz (Teruel)
+  horario: "Lunes a viernes, de 8:00 a 13:30 y de 15:30 a 19:00. Sábados, con cita."
+  whatsapp: "+34 600 000 000"
+redes:
+  instagram: https://www.instagram.com/
+  facebook: https://www.facebook.com/
+  linkedin: ""
+menu:
+  - { texto: Talleres, url: "/#talleres" }
+  - { texto: Qué hacemos, url: "/#servicios" }
+  - { texto: Trabajos, url: "/#trabajos" }
+  - { texto: Zonas, url: "/#zonas" }
+  - { texto: Contacto, url: "/#contacto" }
+boton_cabecera: { texto: Pedir medición, url: "/#presupuesto" }
+seo:
+  titulo: Talleres Guadalope · Aluminio, PVC y cristal en Alcañiz
+  descripcion: "Ventanas de aluminio y PVC, cerramientos, mamparas, barandillas y rejas a medida en Alcañiz y el Bajo Aragón. Medición y presupuesto sin compromiso."
+  tipo: HomeAndConstructionBusiness
+marca_pie: true
+
+secciones:
+  hero:
+    activa: true
+    antetitulo: Carpintería metálica y cristalería en Alcañiz
+    titulo: Ventanas, cristal y forja a tu medida
+    texto: "Medimos en tu casa, fabricamos en nuestro taller e instalamos nosotros."
+    imagen: /fotos/hero.jpg
+    cta: { texto: Llamar ahora, url: "tel:+34978000000" }
+    cta_secundario: { texto: Pedir medición, url: "/#presupuesto" }
+    items:
+      - { titulo: Gratis, texto: Medición en casa }
+      - { titulo: "3", texto: Talleres propios }
+
+  talleres:
+    activa: true
+    antetitulo: Lo que fabricamos
+    titulo: Tres talleres bajo el mismo techo
+    texto: "Cada encargo pasa por el taller que toca. Sin intermediarios y sin esperar a otro gremio."
+    items:
+      - titulo: Aluminio y PVC
+        texto: "Ventanas, puertas y cerramientos con rotura de puente térmico, cortados y montados aquí."
+        incluye: "Ventanas y balconeras; Cerramientos de terraza; Persianas y mosquiteras; Puertas de entrada"
+        imagen: /fotos/taller-aluminio.jpg
+      - titulo: Cristalería
+        texto: "Cortamos el vidrio a medida y lo colocamos el mismo día si es una urgencia."
+        incluye: "Mamparas de baño; Doble acristalamiento; Espejos a medida; Vidrios de seguridad"
+        imagen: /fotos/taller-cristal.jpg
+      - titulo: Cerrajería y forja
+        texto: "Soldamos y pintamos en el taller lo que luego tiene que aguantar años a la intemperie."
+        incluye: "Barandillas y pasamanos; Rejas y cancelas; Puertas de garaje; Pérgolas y estructuras ligeras"
+        imagen: /fotos/taller-forja.jpg
+
+  servicios:
+    activa: true
+    antetitulo: Qué hacemos
+    titulo: Hecho a medida, del primer milímetro
+    texto: "Lo que más nos piden. Si no está en la lista, pregúntanos: casi seguro que lo hacemos."
+    items:
+      - titulo: Ventanas de aluminio y PVC
+        texto: "Abatibles, oscilobatientes o correderas, con doble o triple vidrio."
+        categoria: Aluminio y PVC
+        precio: "Desde 290 €"
+        imagenes: "/fotos/trabajo-ventanas.jpg; /fotos/hero.jpg"
+        detalle: |
+          Cambiar las ventanas es lo que más se nota en casa: menos frío en invierno, menos calor en verano y menos ruido de la calle. Fabricamos ventanas de aluminio con rotura de puente térmico y de PVC, abatibles, oscilobatientes o correderas, con el vidrio que necesite cada orientación.
+
+          Vamos a medir cada hueco, porque en las casas antiguas no hay dos iguales. Te enseñamos muestras de perfiles y colores, también imitación madera para las fachadas de piedra del casco antiguo, y te damos el presupuesto cerrado por escrito.
+
+          Las ventanas se cortan y se montan en nuestro taller. El día de la instalación quitamos las viejas, colocamos las nuevas, sellamos por dentro y por fuera y recogemos todo. En la mayoría de pisos lo hacemos en un solo día.
+      - titulo: Cerramientos de terraza
+        texto: "Correderas, cortinas de cristal y techos para ganar una habitación."
+        categoria: Aluminio y PVC
+        precio: "Consultar"
+        imagenes: "/fotos/trabajo-cerramiento.jpg"
+        detalle: |
+          Un cerramiento convierte una terraza que solo usas en verano en una habitación más de la casa: para comer, para tender o para leer al sol en enero. Los hacemos con correderas de aluminio, con cortina de cristal sin perfiles verticales o con techo fijo o practicable.
+
+          Antes de empezar revisamos contigo lo que permite la comunidad y el ayuntamiento, para que el cerramiento cumpla y no dé problemas. Elegimos juntos el color de los perfiles para que case con la fachada.
+
+          Fabricamos todo a medida en el taller y lo montamos en uno o dos días, según el tamaño. Dejamos la terraza limpia y te explicamos cómo abrir, cerrar y limpiar cada hoja.
+      - { titulo: Persianas y mosquiteras, texto: "Persianas de aluminio, motorizadas o de cinta, y mosquiteras enrollables.", categoria: Aluminio y PVC, precio: "Desde 95 €" }
+      - titulo: Mamparas de baño
+        texto: "De vidrio templado, fijas, abatibles o correderas, a la medida de tu ducha."
+        categoria: Cristalería
+        precio: "Desde 260 €"
+        imagenes: "/fotos/trabajo-mampara.jpg"
+        detalle: |
+          Una mampara a medida aprovecha hasta el último centímetro del baño y no deja salir el agua. Las hacemos de vidrio templado de seguridad, transparente, mate o al ácido, con perfiles en plata, blanco o negro mate.
+
+          Medimos el plato y las paredes en tu casa, porque casi nunca están del todo rectas, y te proponemos la apertura que mejor va: fija, abatible o corredera. Si cambias la bañera por un plato de ducha, nos coordinamos con quien haga la obra.
+
+          La instalamos en una mañana, con silicona sanitaria y todo nivelado. Te dejamos los consejos para que el vidrio se mantenga como el primer día.
+      - { titulo: Vidrios y espejos, texto: "Cristales rotos, doble acristalamiento, espejos y vidrio de seguridad a medida.", categoria: Cristalería, precio: "Consultar" }
+      - titulo: Barandillas y pasamanos
+        texto: "De acero, hierro forjado o acero y vidrio, para escaleras, balcones y terrazas."
+        categoria: Cerrajería y forja
+        precio: "Consultar"
+        imagenes: "/fotos/trabajo-barandilla.jpg"
+        detalle: |
+          Una barandilla tiene que ser segura, pero también puede ser lo más bonito de la escalera. Las fabricamos de pletina de acero, de hierro forjado o de acero con vidrio, con pasamanos de madera o metálico, para escaleras interiores, balcones y terrazas.
+
+          Vamos a medir y a ver el tipo de peldaño o de forjado donde se va a anclar. Te dibujamos el diseño con las medidas y te damos el presupuesto cerrado. Todas cumplen la altura y la separación entre barrotes que marca la normativa.
+
+          Soldamos, lijamos y pintamos cada pieza en el taller, con imprimación contra el óxido si va al exterior. La instalación suele ser de un día y sin obra.
+      - { titulo: Rejas y cancelas, texto: "Rejas de ventana, cancelas de patio y puertas de forja a medida.", categoria: Cerrajería y forja, precio: "Desde 180 €" }
+      - { titulo: Puertas de garaje, texto: "Seccionales, basculantes o batientes, con motor y mando a distancia.", categoria: Cerrajería y forja, precio: "Consultar" }
+      - { titulo: Pérgolas y estructuras ligeras, texto: "Pérgolas de acero o aluminio, porches y altillos para naves.", categoria: Cerrajería y forja, precio: "Consultar" }
+
+  trabajos:
+    activa: true
+    antetitulo: Trabajos hechos
+    titulo: Lo último que ha salido del taller
+    texto: "Algunos encargos recientes en Alcañiz y los pueblos de alrededor."
+    trabajos:
+      - { titulo: Cerramiento de ático, lugar: Alcañiz, categoria: Aluminio y PVC, texto: "Correderas de aluminio antracita y techo fijo. Dos días de montaje.", imagen: /fotos/trabajo-cerramiento.jpg }
+      - { titulo: Ventanas en casa de piedra, lugar: Calanda, categoria: Aluminio y PVC, texto: "Aluminio imitación madera para el casco antiguo.", imagen: /fotos/trabajo-ventanas.jpg }
+      - { titulo: Mampara de ducha, lugar: Caspe, categoria: Cristalería, texto: "Vidrio templado con perfil negro mate.", imagen: /fotos/trabajo-mampara.jpg }
+      - { titulo: Barandilla de escalera, lugar: Andorra, categoria: Cerrajería y forja, texto: "Barrotes de acero y pasamanos de roble.", imagen: /fotos/trabajo-barandilla.jpg }
+      - { titulo: Puerta de garaje seccional, lugar: Alcorisa, categoria: Cerrajería y forja, texto: "Chapa lisa gris con motor y dos mandos.", imagen: /fotos/trabajo-garaje.jpg }
+
+  proceso:
+    activa: true
+    antetitulo: Cómo trabajamos
+    titulo: De la llamada a la instalación
+    items:
+      - { titulo: Nos llamas, texto: "Por teléfono, WhatsApp o el formulario. Te damos día para medir." }
+      - { titulo: Medimos, texto: "Vamos a tu casa, medimos cada hueco y te enseñamos muestras." }
+      - { titulo: Fabricamos, texto: "Con el presupuesto aceptado, lo hacemos en nuestro taller." }
+      - { titulo: Instalamos, texto: "Montamos, sellamos, probamos contigo y nos llevamos lo viejo." }
+
+  cifras:
+    activa: true
+    antetitulo: En números
+    titulo: Oficio de taller
+    items:
+      - { titulo: "1987", texto: Abrimos el taller }
+      - { titulo: "3", texto: Talleres propios }
+      - { titulo: "40 km", texto: De radio de instalación }
+      - { titulo: "5 años", texto: De garantía en ventanas }
+
+  zonas:
+    activa: true
+    antetitulo: Dónde instalamos
+    titulo: El Bajo Aragón y alrededores
+    texto: "Medimos e instalamos a unos 40 km de Alcañiz. Si tu pueblo no sale, llámanos."
+    titulo_pagina: "Carpintería metálica en {zona}"
+    texto_pagina: "Ventanas de aluminio y PVC, cerramientos, mamparas, barandillas y rejas a medida en {zona}. {negocio} mide, fabrica en su taller e instala."
+    items:
+      - titulo: Alcañiz
+        texto: "Aquí está nuestro taller, en el polígono Las Horcas, y aquí hemos hecho la mayoría de los encargos: ventanas de aluminio en pisos del centro, cerramientos de terraza en los bloques nuevos, rejas y balcones de forja en las casas del casco antiguo y mamparas en los baños que se reforman. Al estar tan cerca, vamos a medir en pocos días y, si se rompe un cristal, lo cambiamos enseguida."
+      - titulo: Calanda
+        texto: "En Calanda trabajamos mucho en casas de piedra, donde las ventanas nuevas tienen que respetar la fachada. Hacemos ventanas de aluminio imitación madera y de PVC, contraventanas, rejas y puertas de garaje. También cerramos patios y porches con estructuras ligeras para aprovecharlos todo el año."
+      - titulo: Caspe
+        texto: "En Caspe hacemos sobre todo mamparas de baño, vidrios y espejos a medida, ventanas para segundas residencias junto al embalse y barandillas para terrazas. Medimos un día, fabricamos en Alcañiz y volvemos a instalar con todo listo, para que la obra dure lo menos posible."
+      - titulo: Andorra
+        texto: "En Andorra y la Sierra de Arcos instalamos ventanas con buen aislamiento para los inviernos fríos, persianas motorizadas, barandillas de escalera y puertas de garaje seccionales. Cuéntanos qué necesitas y te damos día para ir a medir sin compromiso."
+      - { titulo: Valderrobres }
+      - { titulo: Alcorisa }
+      - { titulo: Híjar }
+      - { titulo: Maella }
+
+  opiniones:
+    activa: true
+    antetitulo: Opiniones
+    titulo: Lo que dicen de nosotros
+    testimonios:
+      - { texto: "Cambiaron las seis ventanas del piso en un día y lo dejaron todo limpio. Se nota en la calefacción.", autor: Marisa L., nota: "Ventanas de PVC, Alcañiz" }
+      - { texto: "La barandilla quedó como la dibujamos. Vinieron a medir dos veces para que encajara bien.", autor: Jorge y Elena, nota: "Barandilla de escalera, Andorra" }
+      - { texto: "Se nos rompió el cristal del escaparate un sábado y el lunes a primera hora estaba puesto.", autor: Pedro A., nota: "Vidrio de seguridad, Caspe" }
+
+  presupuesto:
+    activa: true
+    antetitulo: Presupuesto sin compromiso
+    titulo: Pide medición y presupuesto
+    texto: "Cuéntanos qué necesitas y te llamamos para ir a medir."
+    nota: "Sin compromiso. Te contestamos en un día laborable."
+    boton_formulario: Pedir medición
+    items:
+      - { titulo: Medición gratis, texto: "Vamos a tu casa sin coste." }
+      - { titulo: Precio cerrado, texto: "Por escrito, antes de fabricar." }
+      - { titulo: Instalación propia, texto: "La hacemos nosotros, sin subcontratas." }
+
+  preguntas:
+    activa: true
+    antetitulo: Preguntas frecuentes
+    titulo: Lo que nos preguntan antes del encargo
+    preguntas:
+      - { pregunta: "¿La medición tiene coste?", respuesta: "No. Vamos a tu casa, medimos y te damos el presupuesto por escrito sin compromiso." }
+      - { pregunta: "¿Cuánto se tarda en fabricar unas ventanas?", respuesta: "Depende del perfil y del vidrio. Te damos la fecha de instalación cuando aceptas el presupuesto." }
+      - { pregunta: "¿Hace falta obra para cambiar las ventanas?", respuesta: "Casi nunca. Quitamos las viejas, colocamos las nuevas sobre el mismo hueco y rematamos por dentro y por fuera." }
+      - { pregunta: "¿Necesito permiso para cerrar la terraza?", respuesta: "Suele hacer falta el visto bueno de la comunidad y una comunicación al ayuntamiento. Te decimos qué pedir antes de empezar." }
+      - { pregunta: "¿Cambiáis cristales rotos?", respuesta: "Sí, en casas, comercios y comunidades. Cortamos el vidrio a medida y lo colocamos lo antes posible." }
+
+  contacto:
+    activa: true
+    antetitulo: Contacto
+    titulo: Llámanos o pásate por el taller
+    texto: "Te atendemos por teléfono, por WhatsApp o en la nave."
+    imagen: /fotos/taller.jpg
+    horario:
+      - { dia: Lunes a viernes, horas: "8:00 a 13:30 y 15:30 a 19:00" }
+      - { dia: Sábados, horas: Con cita }
+      - { dia: Domingos, horas: Cerrado }

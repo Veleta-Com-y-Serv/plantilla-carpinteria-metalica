@@ -1,0 +1,31 @@
+---
+// Preguntas frecuentes: cabeza a la izquierda (fija al bajar en escritorio) y las preguntas (`preguntas:
+// [{pregunta, respuesta}]`) en filas con filete, desplegables con <details> (sin JavaScript). Sin preguntas no se pinta.
+import { seccion } from '../../data/site';
+import Banda from '../ui/Banda.astro';
+import Titular from '../ui/Titular.astro';
+interface Props { id: string }
+const s = seccion(Astro.props.id);
+const lista = (s?.preguntas ?? []).filter((p) => p?.pregunta);
+---
+
+{
+  s && lista.length > 0 && (
+    <Banda id={Astro.props.id} color="papel">
+      <div class="preguntas-rejilla">
+        <Titular antetitulo={s.antetitulo} titulo={s.titulo} texto={s.texto} cabeza={false} />
+        <div>
+          {lista.map((p) => (
+            <details class="faq">
+              <summary>
+                <span class="faq-pregunta">{p.pregunta}</span>
+                <span class="faq-signo" aria-hidden="true" />
+              </summary>
+              <p class="faq-respuesta">{p.respuesta}</p>
+            </details>
+          ))}
+        </div>
+      </div>
+    </Banda>
+  )
+}

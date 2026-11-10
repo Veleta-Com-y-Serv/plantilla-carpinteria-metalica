@@ -1,0 +1,28 @@
+---
+// Cifras: `items: [{titulo: "1987", texto: "Abrimos el taller"}]` en celdas encerradas por filetes de 3 px, la cifra en
+// Jost 700 a tamaño de titular y lo que cuenta debajo en letra menuda. Sin color (un conjunto de un solo tipo no lleva).
+// **No se pinta si `items` está vacío.** No se inventan: solo las que da el cliente.
+import { seccion, letras } from '../../data/site';
+import Banda from '../ui/Banda.astro';
+import Titular from '../ui/Titular.astro';
+interface Props { id: string }
+const s = seccion(Astro.props.id);
+const items = (s?.items ?? []).filter((it) => String(it?.titulo ?? '').trim());
+const max = Math.max(4, ...items.map((it) => letras(it.titulo)));
+---
+
+{
+  s && items.length > 0 && (
+    <Banda id={Astro.props.id} color="papel">
+      <Titular antetitulo={s.antetitulo} titulo={s.titulo} texto={s.texto} />
+      <ul class="cifras celdas" style={`--n:${Math.min(items.length, 4)}`}>
+        {items.map((it) => (
+          <li class="ajuste">
+            <span class="cifra encaja" style={`--letras:${max}`}>{it.titulo}</span>
+            {it.texto && <p class="menuda">{it.texto}</p>}
+          </li>
+        ))}
+      </ul>
+    </Banda>
+  )
+}

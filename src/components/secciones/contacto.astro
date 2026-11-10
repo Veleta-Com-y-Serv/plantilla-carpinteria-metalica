@@ -1,0 +1,85 @@
+---
+// Contacto: banda de papel 2. A la izquierda, la cabeza, las vías en celdas con filetes (teléfono en grande, WhatsApp,
+// email y dirección, de site.yaml → contacto) y el horario como filas (`horario: [{dia, horas}]`; si no hay, la línea
+// de `contacto.horario`). A la derecha, la foto de la nave (`imagen`) enmarcada con la dirección al pie.
+// Si la sección `presupuesto` no está activa, aquí sale el formulario como hoja de impreso.
+import { seccion, site, tel, mapa, whatsapp } from '../../data/site';
+import { altSeccion } from '../../lib/seo';
+import Banda from '../ui/Banda.astro';
+import Titular from '../ui/Titular.astro';
+import Imagen from '../ui/Imagen.astro';
+import FormularioContacto from '../ui/FormularioContacto.astro';
+interface Props { id: string }
+const s = seccion(Astro.props.id);
+const c = site.contacto;
+const horario = (s?.horario ?? []).filter((h) => h?.dia || h?.horas);
+const conFormulario = !seccion('presupuesto');
+const vias = [
+  c.telefono && { etiqueta: 'Teléfono', dato: c.telefono, url: tel(c.telefono), grande: true, fuera: false },
+  c.whatsapp && { etiqueta: 'WhatsApp', dato: c.whatsapp, url: whatsapp(c.whatsapp), grande: true, fuera: true },
+  c.email && { etiqueta: 'Email', dato: c.email, url: `mailto:${c.email}`, grande: false, fuera: false },
+  c.direccion && { etiqueta: 'Dirección', dato: c.direccion, url: mapa(c.direccion), grande: false, fuera: true },
+].filter(Boolean) as { etiqueta: string; dato: string; url: string; grande: boolean; fuera: boolean }[];
+const lado = s?.imagen || conFormulario;
+const hayAlgo = Boolean(s && (s.titulo || s.antetitulo || s.texto || vias.length || horario.length || c.horario || lado));
+---
+
+{
+  s && hayAlgo && (
+    <Banda id={Astro.props.id} color="papel2">
+      <div class:list={['contacto-rejilla', { 'contacto-rejilla--sola': !lado }]}>
+        <div>
+          <Titular antetitulo={s.antetitulo} titulo={s.titulo} texto={s.texto} cabeza={false} />
+          {vias.length > 0 && (
+            <ul class="vias celdas" style="margin-top:2.5rem">
+              {vias.map((v) => (
+                <li>
+                  <a href={v.url} {...(v.fuera && { rel: 'noopener', target: '_blank' })}>
+                    <span class="menuda">{v.etiqueta}</span>
+                    <span class:list={['via-dato', { 'via-dato--grande': v.grande }]}>{v.dato}</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          )}
+          {horario.length > 0 ? (
+            <table class="horario">
+              <caption class="sr-only">Horario</caption>
+              <tbody>
+                {horario.map((h) => (
+                  <tr>
+                    <th scope="row">{h.dia}</th>
+                    <td>{h.horas}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          ) : (
+            c.horario && <p class="horario-suelto">{c.horario}</p>
+          )}
+        </div>
+        {lado && (
+          <div class="grid gap-8">
+            {s.imagen && (
+              <figure class="nave marco">
+                <div class="foto">
+                  <Imagen src={s.imagen} alt={altSeccion(s)} ancho={1200} alto={900} />
+                </div>
+                {c.direccion && (
+                  <figcaption class="nave-pie">
+                    <a href={mapa(c.direccion)} rel="noopener" target="_blank">{c.direccion}</a>
+                  </figcaption>
+                )}
+              </figure>
+            )}
+            {conFormulario && (
+              <div class="hoja">
+                <FormularioContacto modelo="contacto" prefijo={`${Astro.props.id}-f`} boton="Enviar" />
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+    </Banda>
+  )
+}

@@ -1,0 +1,31 @@
+---
+// Cómo trabajamos: banda de tinta a todo el ancho con los pasos (`items: [{titulo, texto}]`) como un horario en filas:
+// número y título en mayúsculas de Jost tan grandes como una cabeza de sección a la izquierda, lo que pasa a la
+// derecha, filete de 2 px sobre la primera fila. Es una lista ordenada de verdad (<ol>). Sin pasos, solo la cabeza.
+import { seccion, letras } from '../../data/site';
+import Banda from '../ui/Banda.astro';
+import Titular from '../ui/Titular.astro';
+interface Props { id: string }
+const s = seccion(Astro.props.id);
+const pasos = (s?.items ?? []).filter((it) => it?.titulo);
+---
+
+{
+  s && (s.titulo || s.antetitulo || s.texto || pasos.length > 0) && (
+    <Banda id={Astro.props.id} color="tinta">
+      <Titular antetitulo={s.antetitulo} titulo={s.titulo} texto={s.texto} />
+      {pasos.length > 0 && (
+        <ol class="filas-grandes">
+          {pasos.map((p) => (
+            <li>
+              <div class="ajuste">
+                <h3 class="encaja" style={`--letras:${letras(p.titulo) + 2}`}>{p.titulo}</h3>
+              </div>
+              {p.texto && <p>{p.texto}</p>}
+            </li>
+          ))}
+        </ol>
+      )}
+    </Banda>
+  )
+}

@@ -1,0 +1,121 @@
+# Metadatos de la plantilla para el catálogo de NoExpertise.
+id: carpinteria-metalica
+nombre: Carpintería metálica y cristalería
+descripcion: "Web de taller para aluminio, PVC, cristal y forja: trabajos hechos, zonas y medición sin compromiso."
+sectores:
+  - { id: carpinteria-metalica, nombre: Carpintería metálica }
+  - { id: cristaleria, nombre: Cristalería }
+  - { id: cerrajeria, nombre: Cerrajería y forja }
+  - { id: aluminio-pvc, nombre: Carpintería de aluminio y PVC }
+secciones:
+  - { id: hero, nombre: Portada }
+  - { id: talleres, nombre: Lo que fabricamos }
+  - { id: servicios, nombre: Qué hacemos }
+  - { id: trabajos, nombre: Trabajos hechos }
+  - { id: proceso, nombre: Cómo trabajamos }
+  - { id: cifras, nombre: Cifras }
+  - { id: zonas, nombre: Dónde instalamos }
+  - { id: opiniones, nombre: Opiniones }
+  - { id: presupuesto, nombre: Pedir presupuesto }
+  - { id: preguntas, nombre: Preguntas frecuentes }
+  - { id: contacto, nombre: Contacto }
+estilo: werkstatt
+plan_minimo: gratis
+version: 1.0.0
+base: astrowind
+demo_url: https://demo-plantilla-carpinteria-metalica.noexpertise.com
+activa: true
+orden: 700
+
+# Páginas propias (docs/plantillas.md § Fichas por elemento y páginas por zona). Espejo en src/data/fichas.ts.
+# Cada servicio con `detalle` tiene su página en /servicios/<slug>/ y cada zona con `texto`, en /zonas/<slug>/.
+fichas:
+  - { lista: servicios, campo: items, ruta: servicios, nombre: Servicio, tipo: Service }
+zonas:
+  ruta: zonas
+
+# Varias páginas (docs/plantillas.md § Varias páginas): reparto recomendado al activar «Varias páginas».
+# Inicio se queda con la portada y lo que no esté en ninguna página (aquí, trabajos hechos, cifras y opiniones).
+paginas:
+  - { ruta: que-hacemos, titulo: Qué hacemos, secciones: "talleres; servicios; proceso" }
+  - { ruta: donde-instalamos, titulo: Dónde instalamos, secciones: "zonas" }
+  - { ruta: presupuesto, titulo: Presupuesto y contacto, secciones: "presupuesto; preguntas; contacto" }
+
+# Asistente de puesta en marcha (NoExpertise): un paso por pantalla. Rutas del site sin índices;
+# tipos: texto y lista (la IA propone), datos, fotos, eleccion (colores y logo) y repaso.
+asistente:
+  - id: negocio
+    titulo: "Tu taller"
+    pregunta: "¿Cómo se llama tu taller y qué fabricáis e instaláis?"
+    ayuda: "Por ejemplo: ventanas de aluminio y PVC, cerramientos, mamparas, barandillas o rejas, y en qué pueblo o ciudad tenéis la nave."
+    tipo: texto
+    campos: [nombre, eslogan, seo.titulo, seo.descripcion, secciones.hero.antetitulo, secciones.hero.titulo, secciones.hero.texto]
+  - id: contacto
+    titulo: "Cómo te encuentran"
+    pregunta: "¿Dónde está el taller y cómo os pueden llamar o escribir para pedir presupuesto?"
+    ayuda: "Solo lo que quieras que vean tus clientes. Si usáis WhatsApp para presupuestos, ponlo: saldrá un botón para escribiros."
+    tipo: datos
+    campos: [contacto.telefono, contacto.whatsapp, contacto.email, contacto.direccion, contacto.horario, redes.instagram, redes.facebook]
+  - id: talleres
+    titulo: "Tus talleres"
+    pregunta: "¿En qué trabajáis? Dime cada taller o especialidad, uno por línea, con lo que hacéis en él."
+    ayuda: "Por ejemplo: «Aluminio y PVC: ventanas, cerramientos y persianas», «Cristalería: mamparas, espejos y vidrios», «Cerrajería y forja: barandillas, rejas y puertas de garaje». Cada uno sale con su color."
+    tipo: lista
+    campos: [secciones.talleres.items]
+  - id: servicios
+    titulo: "Lo que hacéis"
+    pregunta: "¿Qué trabajos os piden más? Uno por línea, con el precio orientativo si quieres darlo."
+    ayuda: "Por ejemplo: «Ventanas de PVC oscilobatientes, desde 290 €», «Mamparas de baño a medida», «Rejas de ventana». Si no das precio, saldrá sin él."
+    tipo: lista
+    campos: [secciones.servicios.items]
+  - id: trabajos
+    titulo: "Trabajos hechos"
+    pregunta: "Cuéntame algunos encargos recientes: qué hicisteis y en qué pueblo. Uno por línea."
+    ayuda: "Por ejemplo: «Cerramiento de terraza en un ático de Alcañiz», «Barandilla de escalera en Andorra». Las fotos las pones en el paso de fotos o luego en Contenido."
+    tipo: lista
+    campos: [secciones.trabajos.trabajos]
+  - id: proceso
+    titulo: "Cómo trabajáis"
+    pregunta: "¿Cómo es un encargo con vosotros, desde que os llaman hasta que lo dejáis instalado?"
+    ayuda: "Por ejemplo: vamos a medir sin coste, damos el presupuesto por escrito, fabricamos en el taller e instalamos nosotros."
+    tipo: texto
+    campos: [secciones.proceso.titulo, secciones.proceso.items]
+  - id: zonas
+    titulo: "Dónde instaláis"
+    pregunta: "¿En qué pueblos o barrios medís e instaláis? ¿Hasta cuántos kilómetros os desplazáis?"
+    ayuda: "Por ejemplo: «En Alcañiz y a unos 40 km: Calanda, Caspe, Andorra, Alcorisa…». Luego puedes escribir un texto para cada pueblo y tendrá su propia página."
+    tipo: texto
+    campos: [secciones.zonas.titulo, secciones.zonas.texto, secciones.zonas.items]
+  - id: presupuesto
+    titulo: "Presupuesto"
+    pregunta: "¿Cómo dais el presupuesto? ¿Vais a medir, cobráis la visita, en cuánto tiempo contestáis?"
+    ayuda: "Por ejemplo: medición gratis en casa, precio cerrado por escrito antes de fabricar, contestamos en un día laborable."
+    tipo: texto
+    campos: [secciones.presupuesto.titulo, secciones.presupuesto.texto, secciones.presupuesto.items, secciones.presupuesto.nota]
+  - id: horario
+    titulo: "Horario"
+    pregunta: "¿Qué días y a qué horas abrís el taller o atendéis el teléfono?"
+    ayuda: "Por ejemplo: de lunes a viernes, de 8:00 a 13:30 y de 15:30 a 19:00; sábados, con cita."
+    tipo: lista
+    campos: [secciones.contacto.horario]
+  - id: preguntas
+    titulo: "Preguntas frecuentes"
+    pregunta: "¿Qué os preguntan más antes de encargar? Escribe cada pregunta y lo que respondéis."
+    ayuda: "Por ejemplo: si la medición cuesta algo, cuánto tardáis en fabricar, si hace falta obra o permiso para cerrar una terraza."
+    tipo: lista
+    campos: [secciones.preguntas.preguntas]
+  - id: fotos
+    titulo: "Tus fotos"
+    pregunta: "Pon una foto de portada y, si quieres, la de tu taller o tu nave."
+    ayuda: "Sube las tuyas o elige una del banco. Quedan mejor los trabajos terminados y el taller con luz de día. En la web salen en blanco y negro, como un catálogo. Las que no cambies se quedan como están."
+    tipo: fotos
+    campos: [secciones.hero.imagen, secciones.contacto.imagen]
+  - id: aspecto
+    titulo: "Colores y logo"
+    pregunta: "Elige los colores de tu web y, si tienes, tu logo."
+    ayuda: "El color principal marca tu primer taller y la banda de presupuesto; el de acento, el segundo taller (el tercero sale de él)."
+    tipo: eleccion
+    campos: [colores.primario, colores.acento, logo]
+  - id: repaso
+    titulo: "Repaso"
+    tipo: repaso

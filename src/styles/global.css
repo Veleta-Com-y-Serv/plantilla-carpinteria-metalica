@@ -1,0 +1,438 @@
+/* Hallmark · shape: Catalogue con bandas (los tres talleres y su índice) · genre: playful · theme: Werkstatt (by request) · job: pedir medición y presupuesto (llamar, WhatsApp, formulario) · draw: manual (plantilla NoExpertise)
+ * hero: Stage (texto en 5 columnas, foto enmarcada en 7 con la franja de los tres talleres debajo) · nav: edge-aligned fija con filete de 2 px · footer: mast en banda de tinta · imagery: photographs generadas para la plantilla, mono · signature: los tres talleres codificados por color (azul, bermellón, amarillo), el mismo color en la portada, el índice de servicios y el pie de cada trabajo · werkstatt: putty
+ * axes: light/geometric-caps/warm-neutral · posture: full-palette · contrast: pass · fold: pass · v2.0.0 */
+/* Hallmark · pre-emit critique: P2 H2 E2 S2 R2 V2 · weakest: E (mucho texto de servicio), resuelto con índice en tabla, celdas con filetes y fotos solo en tres apartados */
+/* waive 54/67: el campo `antetitulo` es contrato de NoExpertise; se pinta como letra menuda en caja normal, sin versalitas. */
+/* waive 46a: `opiniones` y `cifras` son listas de ejemplo; la plataforma las deja desmarcadas y vacías hasta que el cliente pone las suyas. */
+/* waive 48: los literales del bloque :root son respaldos de color-mix; los de comun.css (común a todas las plantillas) y el style de <html> con los cuatro colores del cliente son contrato de NoExpertise. */
+/* waive 20: el CSS se sirve en línea y Tailwind antepone su cabecera; el sello es la primera línea de este fichero fuente. */
+/* waive bandas: el tema pide dos bandas como mucho; aquí hay papel 2 (dos veces), tinta y un campo de primario, porque el gusto del cliente es de bandas a todo el ancho. */
+/* waive 67: el tema Werkstatt declara las mayúsculas como material: controles en Karla 600 en mayúsculas sin espaciar y las cabezas de fila del horario en Jost; `.pie-titulo` de comun.css (común) se anula aquí. */
+/* waive F4: el botón de la cabecera va lleno de tinta como en el tema; es la misma acción que la portada repite con borde. */
+/* waive 58: Hallmark pide 450 palabras por página; una web de oficio con su índice de servicios y las preguntas pasa de 900 y es contenido que el cliente necesita. */
+/*
+ * Carpintería metálica y cristalería (NoExpertise), tema Werkstatt: papel masilla, tinta casi negra, Jost 700 en
+ * mayúsculas para titulares y cifras, Karla para leer, filetes de tinta cuadrados de 2 y 3 px que encierran celdas,
+ * cero radios, cero sombras, fotos en blanco y negro y tres primarios planos, cada uno con un trabajo: codificar un
+ * taller. Todo sale de las cuatro variables de color de site.yaml:
+ *   --c-fondo = papel · --c-texto = tinta · --c-primario = primer taller y campo de presupuesto ·
+ *   --c-acento = segundo taller · el tercero (amarillo) se deriva del acento.
+ * Los demás tonos se derivan con color-mix() u oklch(from …): la web sigue legible si el cliente cambia los colores.
+ */
+@import "tailwindcss";
+@import "./comun.css";
+@config "../../tailwind.config.mjs";
+
+@font-face { font-family: "Jost"; font-style: normal; font-weight: 700; font-display: swap; src: url("/fuentes/jost-700.woff2") format("woff2"); }
+@font-face { font-family: "Karla"; font-style: normal; font-weight: 400; font-display: swap; src: url("/fuentes/karla-400.woff2") format("woff2"); }
+@font-face { font-family: "Karla"; font-style: normal; font-weight: 600; font-display: swap; src: url("/fuentes/karla-600.woff2") format("woff2"); }
+
+:root {
+  --fuente-titulos: "Jost", "Futura", "Century Gothic", "Avenir Next", ui-sans-serif, system-ui, sans-serif;
+  --fuente-texto: "Karla", ui-sans-serif, system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --ancho: 90rem; --ritmo: 4.5rem; --ritmo-md: 6rem; --ritmo-lg: 8rem;
+  --alto-cabecera: 4.25rem;
+  --radio: 0;
+  --filete: 1px; --barra: 2px; --caja: 3px;
+  --dur-micro: 120ms; --dur-corta: 220ms; --salida: cubic-bezier(.2, .7, .2, 1);
+  /* Ancho medio de una letra mayúscula de Jost 700 (medido: 0,60-0,67 em en palabras largas del castellano). */
+  --letra: .68;
+
+  /* Papel y tinta (derivados: siguen funcionando con los colores del cliente) */
+  --papel: var(--c-fondo);
+  --papel-2: color-mix(in oklab, var(--c-fondo) 91%, var(--c-texto));
+  --papel-3: color-mix(in oklab, var(--c-fondo) 55%, #fff);
+  --tinta: var(--c-texto);
+  --tinta-2: color-mix(in oklab, var(--c-texto) 90%, var(--c-fondo));
+  --apagado: color-mix(in oklab, var(--c-texto) 74%, var(--c-fondo));
+  --regla: color-mix(in oklab, var(--c-texto) 42%, var(--c-fondo));
+  /* Banda de tinta («blackboard»): fondo = tinta, letra = papel aclarado */
+  --sobre-tinta: color-mix(in oklab, var(--c-fondo) 72%, #fff);
+  --sobre-tinta-2: color-mix(in oklab, var(--sobre-tinta) 78%, var(--c-texto));
+  --regla-tinta: color-mix(in oklab, var(--c-texto) 62%, var(--c-fondo));
+
+  /* Los tres primarios: un taller cada uno */
+  --cat-1: var(--c-primario);
+  --cat-2: var(--c-acento);
+  --cat-3: color-mix(in oklab, var(--c-acento) 22%, #f4c929);
+  /* Letra sobre cada primario (sin «color relativo»: clara sobre los dos primeros, tinta sobre el amarillo) */
+  --sobre-cat-1: #f6f1e8;
+  --sobre-cat-2: #f6f1e8;
+  --sobre-cat-3: var(--c-texto);
+  --margen-lado: max(1rem, calc((100% - var(--ancho)) / 2 + 1rem));
+}
+@supports (color: oklch(from red l c h)) {
+  :root {
+    /* Amarillo del tercer taller: siempre claro (L 0,86), con el matiz del acento girado hacia el amarillo */
+    --cat-3: oklch(from var(--c-acento) 0.86 0.155 calc(h + 59));
+    /* Letra clara u oscura según lo claro que sea el color del cliente */
+    --sobre-cat-1: oklch(from var(--c-primario) clamp(0.17, calc((0.64 - l) * 1000), 0.97) min(c, 0.02) h);
+    --sobre-cat-2: oklch(from var(--c-acento) clamp(0.17, calc((0.64 - l) * 1000), 0.97) min(c, 0.02) h);
+    --sobre-cat-3: oklch(from var(--cat-3) clamp(0.17, calc((0.64 - l) * 1000), 0.97) min(c, 0.02) h);
+  }
+}
+@media (min-width: 40rem) { :root { --margen-lado: max(1.5rem, calc((100% - var(--ancho)) / 2 + 1.5rem)); } }
+@media (min-width: 60rem) { :root { --alto-cabecera: 4.75rem; --margen-lado: max(4rem, calc((100% - var(--ancho)) / 2 + 4rem)); } }
+
+@layer base {
+  html { overflow-x: clip; scroll-padding-top: calc(var(--alto-cabecera) + 1rem); }
+  body { font-family: var(--fuente-texto); font-size: 1.0625rem; line-height: 1.55; color: var(--tinta-2); background: var(--papel); font-synthesis: none; }
+  h1, h2, h3 {
+    font-family: var(--fuente-titulos); font-weight: 700; line-height: 1.02; letter-spacing: -0.005em; text-transform: uppercase;
+    color: var(--tinta); overflow-wrap: normal; word-break: normal; hyphens: manual; min-width: 0; text-wrap: balance;
+  }
+  a { text-decoration-color: currentColor; text-decoration-thickness: 2px; text-underline-offset: .2em; }
+  a:hover { text-decoration-thickness: 3px; }
+  ::selection { background: var(--cat-3); color: var(--c-texto); }
+  :focus-visible { outline: 3px solid var(--c-primario); outline-offset: 2px; }
+  .banda--tinta :focus-visible, .banda--campo :focus-visible, .pie :focus-visible { outline-color: currentColor; }
+  main { padding-top: var(--alto-cabecera); }
+  img { display: block; }
+}
+
+@layer components {
+  .contenedor { max-width: var(--ancho); padding-inline: 1rem; }
+  @media (min-width: 40rem) { .contenedor { padding-inline: 1.5rem; } }
+  @media (min-width: 60rem) { .contenedor { padding-inline: 4rem; } }
+
+  /* Titular que encaja: el tamaño baja si la palabra más larga (--letras) no cabe en su columna */
+  .ajuste { container-type: inline-size; }
+  .encaja { font-size: min(var(--tam), calc(100cqi / (var(--letras, 12) * var(--letra)))); }
+
+  /* ------------------------------------------------------------------ Bandas a todo el ancho */
+  .banda { position: relative; padding-block: var(--ritmo); background: var(--banda, var(--papel)); color: var(--tinta-2); }
+  @media (min-width: 40rem) { .banda { padding-block: var(--ritmo-md); } }
+  @media (min-width: 60rem) { .banda { padding-block: var(--ritmo-lg); } }
+  .banda--papel { --banda: var(--papel); }
+  .banda--papel2 { --banda: var(--papel-2); }
+  .banda--tinta { --banda: var(--c-texto); color: var(--sobre-tinta); }
+  .banda--campo { --banda: var(--c-primario); color: var(--sobre-cat-1); }
+  .banda--tinta h2, .banda--tinta h3 { color: var(--sobre-tinta); }
+  .banda--campo h2, .banda--campo h3 { color: var(--sobre-cat-1); }
+  /* Filete de separación entre dos bandas del mismo papel */
+  .banda--papel + .banda--papel, .portada + .banda--papel { border-top: var(--caja) solid var(--tinta); }
+
+  /* Letra menuda: Karla 600, un paso más pequeña, en caja normal */
+  .menuda { font-weight: 600; font-size: .9rem; line-height: 1.35; color: var(--apagado); }
+  .antetitulo { font-weight: 600; font-size: .95rem; line-height: 1.3; color: var(--apagado); }
+  .banda--tinta .antetitulo, .banda--tinta .menuda, .pie .menuda { color: var(--sobre-tinta-2); }
+  .banda--campo .antetitulo, .banda--campo .menuda { color: color-mix(in oklab, var(--sobre-cat-1) 82%, var(--c-primario)); }
+
+  /* ------------------------------------------------------------------ Cabeza de sección */
+  .titulo-seccion { --tam: clamp(1.75rem, 1rem + 2.9vw, 3.25rem); max-width: 26ch; }
+  .entrada { font-size: clamp(1.1rem, 1rem + .35vw, 1.3rem); line-height: 1.45; color: var(--tinta-2); max-width: 44ch; }
+  .banda--tinta .entrada { color: var(--sobre-tinta-2); }
+  .banda--campo .entrada { color: color-mix(in oklab, var(--sobre-cat-1) 90%, var(--c-primario)); }
+  .cabeza { display: grid; gap: 1rem; margin-bottom: 2.5rem; }
+  .cabeza > .antetitulo + .titulo-caja { margin-top: -.25rem; }
+  @media (min-width: 60rem) {
+    .cabeza { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); align-items: end; column-gap: 2rem; margin-bottom: 3.5rem; }
+    .cabeza > .antetitulo { grid-column: 1 / -1; }
+    .cabeza > .titulo-caja { grid-column: 1; }
+    .cabeza > .entrada { grid-column: 2; justify-self: end; }
+    .cabeza--sola > .titulo-caja { grid-column: 1 / -1; }
+  }
+
+  /* ------------------------------------------------------------------ Botones: tinta llena y borde de 2 px, cuadrados */
+  .btn, .btn-sec {
+    min-height: 3rem; padding: .8rem 1.4rem; border-radius: 0; max-width: 100%;
+    font-family: var(--fuente-texto); font-weight: 600; font-size: .95rem; text-transform: uppercase; letter-spacing: .02em; white-space: nowrap;
+    transition: background-color var(--dur-micro) var(--salida), color var(--dur-micro) var(--salida), border-color var(--dur-micro) var(--salida);
+  }
+  .btn { background: var(--c-texto); color: var(--sobre-tinta); border: var(--barra) solid var(--c-texto); }
+  .btn:hover { background: var(--tinta-2); border-color: var(--tinta-2); }
+  .btn-sec { background: transparent; color: var(--tinta); border: var(--barra) solid currentColor; }
+  .btn-sec:hover { background: var(--papel-3); }
+  .banda--tinta .btn, .pie .btn { background: var(--sobre-tinta); color: var(--c-texto); border-color: var(--sobre-tinta); }
+  .banda--tinta .btn:hover, .pie .btn:hover { background: var(--c-fondo); border-color: var(--c-fondo); }
+  .banda--tinta .btn-sec, .pie .btn-sec { color: var(--sobre-tinta); }
+  .banda--tinta .btn-sec:hover, .pie .btn-sec:hover { background: color-mix(in oklab, var(--c-texto) 80%, var(--sobre-tinta)); }
+  .banda--campo .btn { background: var(--sobre-cat-1); color: var(--c-primario); border-color: var(--sobre-cat-1); }
+  .banda--campo .btn:hover { background: color-mix(in oklab, var(--sobre-cat-1) 88%, var(--c-primario)); }
+  .banda--campo .btn-sec { color: var(--sobre-cat-1); }
+  .btn:disabled, .btn-sec:disabled, .campo input:disabled, .campo textarea:disabled { opacity: .55; cursor: not-allowed; }
+  .botones { display: flex; flex-wrap: wrap; align-items: center; gap: .75rem; margin-top: 2rem; }
+
+  /* Enlace de texto: subrayado de 2 px que pasa a 3 px */
+  .enlace { font-weight: 600; color: var(--tinta); text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: .22em; }
+  .enlace:hover { text-decoration-thickness: 3px; }
+
+  /* ------------------------------------------------------------------ Colores de taller: rellenos planos */
+  .cat-1 { --cat: var(--cat-1); --sobre-cat: var(--sobre-cat-1); }
+  .cat-2 { --cat: var(--cat-2); --sobre-cat: var(--sobre-cat-2); }
+  .cat-3 { --cat: var(--cat-3); --sobre-cat: var(--sobre-cat-3); }
+  .relleno { background: var(--cat, var(--papel-3)); color: var(--sobre-cat, var(--tinta)); }
+  .relleno h3, .relleno .relleno-titulo { color: inherit; }
+  .muestra { flex: none; display: inline-block; width: .9rem; height: .9rem; background: var(--cat, transparent); border: var(--barra) solid var(--tinta); }
+
+  /* Foto: blanco y negro (tratamiento «mono» del tema), sin radio; el marco lo pone su celda */
+  .foto { position: relative; overflow: hidden; background: var(--papel-2); }
+  .foto > img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(1) contrast(1.06) brightness(1.02); }
+  /* Trabajos hechos y galerías de ficha: la foto en su color (el cliente enseña el acabado real: anodizados, lacados, forja) */
+  .foto--color > img { filter: none; }
+  .marco { border: var(--caja) solid var(--tinta); background: var(--papel); }
+
+  /* Celdas encerradas por filetes de 3 px (sin fondo propio: la celda es lo que encierran los filetes) */
+  .celdas { display: grid; border-top: var(--caja) solid var(--tinta); border-left: var(--caja) solid var(--tinta); }
+  .celdas > * { min-width: 0; border-right: var(--caja) solid var(--tinta); border-bottom: var(--caja) solid var(--tinta); }
+
+  /* ------------------------------------------------------------------ Cabecera fija (siempre sólida y por encima de todo) */
+  .cabecera--taller { position: fixed; top: 0; left: 0; right: 0; z-index: 50; background: var(--papel); color: var(--tinta); border-bottom: var(--barra) solid var(--tinta); }
+  .cabecera--taller .cabecera-fila { min-height: var(--alto-cabecera); gap: 1rem; }
+  .cabecera--taller .marca-nombre { font-family: var(--fuente-titulos); font-weight: 700; text-transform: uppercase; font-size: 1.1rem; line-height: 1.1; letter-spacing: -.005em; }
+  @media (min-width: 60rem) { .cabecera--taller .marca-nombre { font-size: 1.3rem; } }
+  .cabecera--taller .cabecera-nav { gap: .25rem; }
+  .cabecera--taller .cabecera-nav a { font-weight: 600; font-size: .95rem; padding: .55rem .7rem; white-space: nowrap; text-decoration: underline; text-decoration-color: transparent; text-decoration-thickness: 2px; text-underline-offset: .35em; }
+  .cabecera--taller .cabecera-nav a:hover { text-decoration-color: currentColor; text-decoration-thickness: 3px; }
+  .cabecera--taller .cabecera-cta { min-height: 2.75rem; padding: .55rem 1.1rem; font-size: .88rem; }
+  .cabecera--taller .menu-movil summary { min-height: 2.75rem; padding: .45rem .9rem; border: var(--barra) solid var(--tinta); font-weight: 600; font-size: .9rem; text-transform: uppercase; }
+  .cabecera--taller .menu-movil-panel { padding: .25rem 1rem 1.25rem; background: var(--papel); color: var(--tinta); border-top: var(--barra) solid var(--tinta); border-bottom: var(--caja) solid var(--tinta); box-shadow: none; }
+  .cabecera--taller .menu-movil-panel a { font-family: var(--fuente-titulos); font-weight: 700; text-transform: uppercase; font-size: 1.35rem; min-height: 3rem; display: flex; align-items: center; border-bottom: var(--filete) solid var(--regla); }
+  .cabecera--taller .menu-movil-panel .btn { font-family: var(--fuente-texto); font-size: .95rem; margin-top: 1rem; justify-content: center; border-bottom: var(--barra) solid var(--c-texto); }
+  @media (min-width: 60rem) and (max-width: 74.99rem) { .cabecera--taller .cabecera-nav a { padding-inline: .45rem; font-size: .9rem; } }
+
+  /* ------------------------------------------------------------------ Portada «Stage»: texto en 5 columnas, foto enmarcada en 7 */
+  .portada { padding-block: 2rem 3.5rem; }
+  .portada-rejilla { display: grid; gap: 2.5rem; }
+  .portada-texto { min-width: 0; }
+  @media (min-width: 60rem) {
+    .portada { display: flex; align-items: center; min-height: calc(100svh - var(--alto-cabecera)); padding-block: 3rem; }
+    .portada > .contenedor { width: 100%; }
+    .portada-rejilla--foto { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 4rem; align-items: center; }
+  }
+  .portada-titulo { --tam: clamp(2.1rem, 1.1rem + 5vw, 5.1rem); margin-top: .9rem; }
+  .portada-rejilla:not(.portada-rejilla--foto) .portada-titulo { --tam: clamp(2.3rem, 1rem + 5.4vw, 6rem); max-width: 26ch; }
+  .portada-parrafo { margin-top: 1.4rem; max-width: 34rem; font-size: clamp(1.1rem, 1rem + .4vw, 1.3rem); line-height: 1.45; color: var(--tinta-2); }
+  /* Datos de la portada en celdas encerradas (cifras: solo las que da el cliente) */
+  .portada-datos { margin-top: 2rem; grid-template-columns: repeat(var(--n, 2), minmax(0, max-content)); width: fit-content; max-width: 100%; }
+  .portada-datos > li { padding: .7rem 1.1rem .8rem; }
+  .portada-dato { display: block; font-family: var(--fuente-titulos); font-weight: 700; text-transform: uppercase; font-size: clamp(1.5rem, 1.1rem + 1.2vw, 2.1rem); line-height: 1; color: var(--tinta); font-variant-numeric: tabular-nums; }
+  .portada-datos .menuda { display: block; margin-bottom: .35rem; }
+  /* La pieza de la portada: foto y, debajo, la franja con los tres talleres en sus colores */
+  .pieza { margin: 0; }
+  .pieza .foto { aspect-ratio: 4 / 3; }
+  .franja { display: grid; grid-template-columns: repeat(var(--n, 3), minmax(0, 1fr)); border-top: var(--caja) solid var(--tinta); }
+  .franja > li { padding: .8rem 1rem; border-left: var(--caja) solid var(--tinta); font-family: var(--fuente-titulos); font-weight: 700; text-transform: uppercase; line-height: 1.1; min-width: 0; }
+  .franja .encaja { --tam: clamp(.95rem, .8rem + .45vw, 1.1rem); display: block; }
+  .franja > li:first-child { border-left: 0; }
+  @media (max-width: 39.99rem) { .franja { grid-template-columns: 1fr; } .franja > li { border-left: 0; border-top: var(--caja) solid var(--tinta); } .franja > li:first-child { border-top: 0; } }
+
+  /* ------------------------------------------------------------------ Los tres talleres: rejilla codificada */
+  .talleres { grid-template-columns: minmax(0, 1fr); }
+  @media (min-width: 60rem) { .talleres { grid-template-columns: repeat(var(--n, 3), minmax(0, 1fr)); } }
+  .taller { display: flex; flex-direction: column; }
+  .taller .foto { aspect-ratio: 4 / 3; border-bottom: var(--caja) solid var(--tinta); }
+  .taller-nombre { padding: 1rem 1.25rem; border-bottom: var(--caja) solid var(--tinta); }
+  .taller-nombre h3 { --tam: clamp(1.35rem, 1.1rem + .9vw, 1.85rem); }
+  .taller-cuerpo { padding: 1.25rem 1.25rem 1.5rem; display: grid; gap: 1.1rem; align-content: start; }
+  .taller-texto { color: var(--tinta-2); }
+  .taller-lista { border-top: var(--barra) solid var(--tinta); }
+  .taller-lista li { padding-block: .55rem; border-bottom: var(--filete) solid var(--regla); font-weight: 600; color: var(--tinta); }
+
+  /* ------------------------------------------------------------------ Índice de servicios (tabla con filetes) */
+  .indice { border-top: var(--caja) solid var(--tinta); }
+  .indice-cabeza { display: none; }
+  .indice-fila { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: .45rem 1.5rem; padding-block: 1.25rem; border-bottom: var(--filete) solid var(--regla); }
+  .indice-fila:last-child { border-bottom: var(--barra) solid var(--tinta); }
+  @media (min-width: 60rem) {
+    .indice-cabeza, .indice-fila { grid-template-columns: minmax(0, 4fr) minmax(0, 4.4fr) minmax(0, 2.2fr) minmax(0, 1.6fr); align-items: baseline; }
+    .indice-cabeza { display: grid; gap: 2rem; padding-block: .7rem; border-bottom: var(--barra) solid var(--tinta); }
+    .indice-cabeza > :last-child, .indice-precio { text-align: right; }
+  }
+  .indice-fila { container-type: inline-size; }
+  @media (max-width: 59.99rem) { .indice-titulo, .indice-texto { grid-column: 1 / -1; } .indice-precio { text-align: right; } }
+  .indice-titulo { --tam: clamp(1.2rem, 1.05rem + .5vw, 1.5rem); }
+  @media (min-width: 60rem) { .indice-titulo { font-size: min(var(--tam), calc(32cqi / (var(--letras, 12) * var(--letra)))); } }
+  .indice-titulo a { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: .18em; }
+  .indice-titulo a:hover { text-decoration-thickness: 3px; }
+  .indice-texto { color: var(--tinta-2); }
+  .indice-cat { display: inline-flex; align-items: center; gap: .55rem; font-weight: 600; font-size: .95rem; color: var(--tinta); }
+  .indice-precio { font-weight: 600; color: var(--tinta); font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+  /* ------------------------------------------------------------------ Trabajos: fotos enmarcadas con su pie de color */
+  .trabajos { display: grid; gap: 1.5rem; }
+  @media (min-width: 40rem) { .trabajos { grid-template-columns: repeat(2, minmax(0, 1fr)); } .trabajo--ancho { grid-column: 1 / -1; } }
+  @media (min-width: 60rem) {
+    .trabajos { grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 2rem; grid-auto-rows: minmax(24rem, auto); }
+    .trabajo { grid-column: span var(--col, 4); grid-row: span var(--fil, 1); }
+  }
+  .trabajo { display: flex; flex-direction: column; margin: 0; }
+  .trabajo .foto { flex: 1 1 auto; aspect-ratio: 4 / 3; }
+  @media (min-width: 60rem) { .trabajo .foto { aspect-ratio: auto; min-height: 13rem; } .trabajo .foto > img { position: absolute; inset: 0; } }
+  .trabajo-pie { padding: .9rem 1.1rem 1rem; border-top: var(--caja) solid var(--tinta); display: grid; gap: .3rem; }
+  .trabajo-titulo { font-family: var(--fuente-titulos); font-weight: 700; text-transform: uppercase; --tam: clamp(1.05rem, .95rem + .4vw, 1.3rem); line-height: 1.08; }
+  .trabajo-dato { font-weight: 600; font-size: .9rem; }
+  .trabajo-texto { font-size: .98rem; line-height: 1.45; }
+  .trabajo-pie:not(.relleno) { background: var(--papel); color: var(--tinta-2); }
+
+  /* ------------------------------------------------------------------ Proceso: horario en filas (banda de tinta) */
+  .filas-grandes { counter-reset: paso; border-top: var(--barra) solid var(--sobre-tinta); }
+  .filas-grandes > li { counter-increment: paso; display: grid; gap: .5rem 2rem; padding-block: 1.5rem; border-bottom: var(--filete) solid var(--regla-tinta); }
+  @media (min-width: 60rem) { .filas-grandes > li { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); align-items: center; padding-block: 2rem; } }
+  .filas-grandes h3 { --tam: clamp(1.75rem, 1rem + 2.6vw, 3.25rem); display: flex; gap: .4em; align-items: baseline; }
+  .filas-grandes h3::before { content: counter(paso); font-variant-numeric: tabular-nums; min-width: 1.1em; }
+  .filas-grandes p { font-size: 1.1rem; color: var(--sobre-tinta-2); max-width: 40ch; }
+
+  /* ------------------------------------------------------------------ Cifras en celdas */
+  .cifras { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  @media (min-width: 60rem) { .cifras { grid-template-columns: repeat(var(--n, 4), minmax(0, 1fr)); } }
+  .cifras > li { padding: 1.4rem 1.25rem 1.5rem; }
+  .cifra { --tam: clamp(2.2rem, 1.2rem + 3.6vw, 4.5rem); display: block; font-family: var(--fuente-titulos); font-weight: 700; text-transform: uppercase; line-height: 1; color: var(--tinta); font-variant-numeric: tabular-nums; }
+  .cifras .menuda { margin-top: .6rem; font-size: .95rem; }
+
+  /* ------------------------------------------------------------------ Zonas en celdas */
+  .zonas { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  @media (min-width: 60rem) { .zonas { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+  .zonas > li { padding: 1.1rem 1.1rem 1.25rem; display: flex; flex-direction: column; gap: .5rem; min-height: 6.5rem; }
+  .zona-nombre { --tam: clamp(1.05rem, .85rem + .9vw, 1.6rem); }
+  .zona-nombre a { text-decoration: none; }
+  .zona-ver { margin-top: auto; font-size: .92rem; }
+
+  /* ------------------------------------------------------------------ Opiniones en celdas */
+  .opiniones { grid-template-columns: minmax(0, 1fr); }
+  @media (min-width: 60rem) { .opiniones { grid-template-columns: repeat(var(--n, 3), minmax(0, 1fr)); } }
+  .opiniones > li { padding: 1.5rem 1.4rem; display: flex; flex-direction: column; gap: 1.25rem; }
+  .opinion-texto { font-size: 1.12rem; line-height: 1.5; color: var(--tinta); }
+  .opinion-autor { margin-top: auto; padding-top: .9rem; border-top: var(--filete) solid var(--regla); }
+  .opinion-autor strong { display: block; font-weight: 600; color: var(--tinta); }
+
+  /* ------------------------------------------------------------------ Presupuesto: campo de primario y formulario como hoja con filetes */
+  .presupuesto-rejilla { display: grid; gap: 3rem; }
+  @media (min-width: 60rem) { .presupuesto-rejilla { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 4rem; align-items: start; } }
+  .garantias { margin-top: 2rem; border-top: var(--barra) solid currentColor; }
+  .garantias li { display: grid; gap: .15rem; padding-block: .9rem; border-bottom: var(--filete) solid color-mix(in oklab, currentColor 45%, transparent); }
+  .garantias strong { font-family: var(--fuente-titulos); font-weight: 700; text-transform: uppercase; font-size: 1.15rem; line-height: 1.1; }
+  .nota { margin-top: 1.25rem; }
+
+  /* La hoja: campos encerrados en celdas como un impreso, el botón como un bloque al pie */
+  .formulario-fila { display: grid; }
+  .campo-doble { display: grid; }
+  @media (min-width: 40rem) { .campo-doble { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } }
+  .hoja .formulario { gap: 0; border: var(--barra) solid currentColor; }
+  .hoja .campo { gap: .2rem; padding: .7rem .9rem .5rem; border-bottom: var(--barra) solid currentColor; min-width: 0; }
+  .hoja .campo-doble { border-bottom: var(--barra) solid currentColor; }
+  .hoja .campo-doble > .campo { border-bottom: 0; }
+  @media (max-width: 39.99rem) { .hoja .campo-doble > .campo + .campo { border-top: var(--barra) solid currentColor; } }
+  @media (min-width: 40rem) { .hoja .campo-doble > .campo + .campo { border-left: var(--barra) solid currentColor; } }
+  .hoja .campo label { font-weight: 600; font-size: .88rem; color: inherit; opacity: 1; }
+  .hoja .campo input, .hoja .campo textarea, .hoja .campo select {
+    width: 100%; min-width: 0; min-height: 2.75rem; padding: .35rem 0; border: 0; border-radius: 0; background: transparent;
+    font: inherit; font-size: 1.05rem; color: inherit;
+  }
+  .hoja .campo select option { color: var(--c-texto); background: var(--c-fondo); }
+  .hoja .campo input:focus-visible, .hoja .campo textarea:focus-visible, .hoja .campo select:focus-visible { outline: var(--barra) solid currentColor; outline-offset: 2px; }
+  .hoja .campo-check { padding: .9rem; min-height: 2.75rem; border-bottom: var(--barra) solid currentColor; }
+  .hoja .campo-check input { accent-color: currentColor; width: 1.15rem; height: 1.15rem; }
+  .hoja .campo-check a { text-decoration: underline; }
+  .hoja .formulario .btn { justify-self: stretch; width: 100%; min-height: 3.75rem; border: 0; font-size: 1rem; }
+  .hoja .formulario-aviso { padding: .75rem .9rem; font-weight: 600; font-size: .85rem; opacity: 1; border-top: var(--barra) solid currentColor; }
+
+  /* ------------------------------------------------------------------ Preguntas: filas con filetes */
+  .preguntas-rejilla { display: grid; gap: 2.5rem; }
+  @media (min-width: 60rem) { .preguntas-rejilla { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 4rem; } .preguntas-rejilla > .titular { position: sticky; top: calc(var(--alto-cabecera) + 2rem); align-self: start; } }
+  .titular { display: grid; gap: 1rem; }
+  .faq { border-bottom: var(--filete) solid var(--regla); }
+  .faq:first-child { border-top: var(--caja) solid var(--tinta); }
+  .faq:last-child { border-bottom: var(--barra) solid var(--tinta); }
+  .faq summary { list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 1.25rem; min-height: 3rem; padding-block: 1.15rem; font-weight: 600; font-size: clamp(1.08rem, 1rem + .3vw, 1.25rem); line-height: 1.3; color: var(--tinta); }
+  .faq summary::-webkit-details-marker { display: none; }
+  .faq summary:hover .faq-pregunta { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: .2em; }
+  .faq-signo { position: relative; flex: none; width: 1.75rem; height: 1.75rem; border: var(--barra) solid var(--tinta); }
+  .faq-signo::before, .faq-signo::after { content: ""; position: absolute; left: 25%; right: 25%; top: 50%; height: 2px; margin-top: -1px; background: var(--tinta); }
+  .faq-signo::after { transform: rotate(90deg); }
+  .faq[open] .faq-signo::after { display: none; }
+  .faq-respuesta { padding: 0 3rem 1.4rem 0; color: var(--tinta-2); max-width: 48rem; }
+
+  /* ------------------------------------------------------------------ Contacto: vías en celdas, horario en filas y la nave */
+  .contacto-rejilla { display: grid; gap: 3rem; }
+  @media (min-width: 60rem) { .contacto-rejilla { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 4rem; align-items: start; } }
+  .vias { grid-template-columns: minmax(0, 1fr); }
+  @media (min-width: 40rem) { .vias { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  .vias > li { padding: 1rem 1.1rem 1.15rem; }
+  .vias a { text-decoration: none; display: block; }
+  .vias a:hover .via-dato { text-decoration: underline; text-decoration-thickness: 3px; text-underline-offset: .15em; }
+  .via-dato { display: block; margin-top: .35rem; font-weight: 600; font-size: clamp(1rem, .9rem + .4vw, 1.15rem); line-height: 1.3; color: var(--tinta); overflow-wrap: anywhere; }
+  .via-dato--grande { font-family: var(--fuente-titulos); font-weight: 700; text-transform: uppercase; font-size: clamp(1.5rem, 1.1rem + 1.4vw, 2.25rem); line-height: 1; font-variant-numeric: tabular-nums; overflow-wrap: normal; white-space: nowrap; }
+  .horario { width: 100%; margin-top: 2.5rem; border-collapse: collapse; border-top: var(--barra) solid var(--tinta); }
+  .horario tr { border-bottom: var(--filete) solid var(--regla); }
+  .horario tr:last-child { border-bottom: var(--barra) solid var(--tinta); }
+  .horario th { padding: 1rem 1rem 1rem 0; text-align: left; vertical-align: baseline; font-family: var(--fuente-titulos); font-weight: 700; text-transform: uppercase; font-size: clamp(1.05rem, .95rem + .5vw, 1.4rem); line-height: 1.1; color: var(--tinta); }
+  .horario td { padding-block: 1rem; text-align: right; vertical-align: baseline; font-weight: 600; color: var(--tinta-2); font-variant-numeric: tabular-nums; }
+  .horario-suelto { margin-top: 2rem; font-weight: 600; font-size: 1.1rem; color: var(--tinta); }
+  .contacto-rejilla--sola { grid-template-columns: minmax(0, 1fr); }
+  .nave .foto { aspect-ratio: 4 / 3; }
+  @media (min-width: 60rem) { .nave .foto { aspect-ratio: 4 / 5; } }
+  .nave-pie { padding: .8rem 1rem; border-top: var(--caja) solid var(--tinta); background: var(--c-texto); color: var(--sobre-tinta); font-weight: 600; }
+  .nave-pie a { text-decoration: none; }
+  .nave-pie a:hover { text-decoration: underline; }
+
+  /* Apartado de texto */
+  .parrafos { display: grid; gap: 1rem; max-width: 42rem; }
+  .lista-filas { margin-top: 2rem; border-top: var(--barra) solid var(--tinta); }
+  .lista-filas li { display: grid; gap: .25rem 2rem; padding-block: 1rem; border-bottom: var(--filete) solid var(--regla); }
+  @media (min-width: 40rem) { .lista-filas li { grid-template-columns: minmax(0, 2fr) minmax(0, 3fr); } }
+  .lista-filas strong { font-weight: 600; color: var(--tinta); }
+  .texto-rejilla { display: grid; gap: 2.5rem; }
+  @media (min-width: 60rem) { .texto-rejilla--foto { grid-template-columns: minmax(0, 6fr) minmax(0, 6fr); gap: 4rem; align-items: start; } }
+
+  /* ------------------------------------------------------------------ Pie: mástil en la banda de tinta */
+  .pie--taller { padding-top: var(--ritmo-md); background: var(--c-texto); color: var(--sobre-tinta); }
+  .pie-gigante { --tam: clamp(2.2rem, 1rem + 6vw, 6.75rem); font-family: var(--fuente-titulos); font-weight: 700; text-transform: uppercase; line-height: .98; letter-spacing: -.005em; color: var(--sobre-tinta); overflow-wrap: normal; hyphens: manual; text-wrap: balance; }
+  .pie--taller .pie-eslogan { margin-top: 1.1rem; max-width: 52ch; font-size: 1.1rem; opacity: 1; color: var(--sobre-tinta-2); }
+  .pie-columnas { margin-top: 3rem; grid-template-columns: minmax(0, 1fr); border-color: var(--regla-tinta); }
+  .pie-columnas > * { padding: 1.1rem 1.1rem 1.25rem; border-color: var(--regla-tinta); }
+  @media (min-width: 40rem) { .pie-columnas { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (min-width: 60rem) { .pie-columnas { grid-template-columns: repeat(var(--n, 4), minmax(0, 1fr)); } }
+  .pie--taller .pie-titulo { font-size: .9rem; font-weight: 600; text-transform: none; letter-spacing: 0; opacity: 1; color: var(--sobre-tinta-2); margin-bottom: .5rem; }
+  .pie-dato { font-size: 1.02rem; line-height: 1.5; }
+  .pie-dato a, .pie--taller .pie-lista a { text-decoration: none; }
+  .pie-dato a:hover, .pie--taller .pie-lista a:hover { text-decoration: underline; }
+  .pie--taller .pie-lista a { display: inline-block; padding-block: .25rem; }
+  .pie--taller .pie-redes a { display: grid; place-items: center; width: 2.75rem; height: 2.75rem; padding: 0; border: var(--barra) solid var(--regla-tinta); }
+  .pie--taller .pie-redes a:hover { border-color: var(--sobre-tinta); }
+  .pie--taller .pie-legal { margin-top: 0; opacity: 1; font-size: .9rem; color: var(--sobre-tinta-2); border-top: 0; }
+  .pie-noexpertise a { text-decoration: underline; }
+
+  /* Barra fija del móvil: llamar y pedir presupuesto siempre a mano */
+  .barra-movil { position: fixed; left: 0; right: 0; bottom: 0; z-index: 45; display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: .5rem; padding: .55rem .75rem calc(.55rem + env(safe-area-inset-bottom)); background: var(--papel); border-top: var(--caja) solid var(--tinta); }
+  .barra-movil a { min-height: 3rem; padding-inline: .6rem; gap: .5rem; }
+  .pie .barra-movil .btn { background: var(--c-texto); color: var(--sobre-tinta); border-color: var(--c-texto); }
+  .pie .barra-movil .btn-sec { color: var(--tinta); background: var(--papel); border-color: var(--tinta); }
+  @media (min-width: 60rem) { .barra-movil { display: none; } }
+  @media (max-width: 59.99rem) { body:has(.barra-movil) .pie--taller { padding-bottom: 4.75rem; } }
+
+  /* ------------------------------------------------------------------ Páginas propias (fichas y zonas) */
+  .migas ol { display: flex; flex-wrap: wrap; gap: .25rem .6rem; font-weight: 600; font-size: .9rem; color: var(--apagado); }
+  .migas li { display: inline-flex; align-items: center; gap: .6rem; min-width: 0; }
+  .migas li + li::before { content: "/"; color: var(--regla); }
+  .migas a { min-height: 2.75rem; display: inline-flex; align-items: center; color: var(--tinta); }
+  .migas [aria-current] { overflow-wrap: anywhere; }
+  .ficha-cabeza { display: grid; gap: 2.5rem; padding-top: 1rem; }
+  @media (min-width: 60rem) { .ficha-cabeza--foto { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 4rem; align-items: center; } }
+  .ficha-titulo { --tam: clamp(2rem, 1rem + 3.6vw, 4.25rem); margin-top: .9rem; max-width: 26ch; }
+  .ficha-precio { margin-top: 1.5rem; width: fit-content; }
+  .ficha-precio > li { padding: .7rem 1.1rem .8rem; }
+  .ficha-cuerpo { display: grid; gap: 3rem; }
+  @media (min-width: 60rem) { .ficha-cuerpo { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 4rem; align-items: start; } .ficha-lado { position: sticky; top: calc(var(--alto-cabecera) + 2rem); } }
+  .ficha-detalle { display: grid; gap: 1.1rem; max-width: 44rem; font-size: 1.1rem; line-height: 1.65; }
+  .ficha-detalle p:first-child { font-size: 1.25rem; font-weight: 600; color: var(--tinta); line-height: 1.5; }
+  .ficha-lado { display: grid; gap: 1.5rem; align-content: start; }
+  .ficha-datos { border-top: var(--barra) solid var(--tinta); }
+  .ficha-datos > div { display: flex; justify-content: space-between; gap: 1rem; padding-block: .8rem; border-bottom: var(--filete) solid var(--regla); }
+  .ficha-datos dt { font-weight: 600; color: var(--apagado); }
+  .ficha-datos dd { text-align: right; font-weight: 600; color: var(--tinta); min-width: 0; overflow-wrap: anywhere; }
+  .caja-tinta { padding: 1.5rem 1.4rem; background: var(--c-texto); color: var(--sobre-tinta); display: grid; gap: .9rem; }
+  .caja-tinta .caja-titulo { font-family: var(--fuente-titulos); font-weight: 700; text-transform: uppercase; font-size: 1.4rem; line-height: 1.05; }
+  .caja-tinta .btn { background: var(--sobre-tinta); color: var(--c-texto); border-color: var(--sobre-tinta); justify-self: start; }
+  .caja-tinta .enlace { color: var(--sobre-tinta); }
+  .galeria-ficha { display: grid; gap: 1.5rem; grid-template-columns: repeat(auto-fill, minmax(min(100%, 20rem), 1fr)); }
+  .galeria-ficha .foto { aspect-ratio: 4 / 3; }
+  .zona-texto { display: grid; gap: 1rem; max-width: 44rem; font-size: 1.12rem; line-height: 1.65; }
+  .titulo-pequeno { font-size: clamp(1.25rem, 1.1rem + .6vw, 1.6rem); margin-bottom: 1.75rem; }
+  .texto-largo h2 { font-family: var(--fuente-titulos); font-weight: 700; text-transform: uppercase; font-size: 1.4rem; color: var(--tinta); }
+  .error-cifra { font-family: var(--fuente-titulos); font-weight: 700; font-size: clamp(6rem, 25vw, 14rem); line-height: .85; color: var(--tinta); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn, .btn-sec { transition: none; }
+}

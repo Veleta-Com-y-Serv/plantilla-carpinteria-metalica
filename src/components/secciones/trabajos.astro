@@ -1,0 +1,62 @@
+---
+// Trabajos hechos: `trabajos: [{titulo, texto, lugar, categoria, imagen}]` en mosaico a todo el ancho. Cada trabajo es
+// una foto en blanco y negro enmarcada con filete de 3 px y, debajo, su pie: sobre el color de su taller si `categoria`
+// coincide con uno de la sección `talleres` (el color nunca tiñe la foto) o sobre papel si no. El primero va grande
+// (7 columnas y dos filas), los dos siguientes al lado y el resto en filas de dos o tres. Sin foto, solo el pie.
+import { seccion, colorDe, letras } from '../../data/site';
+import Banda from '../ui/Banda.astro';
+import Titular from '../ui/Titular.astro';
+import Imagen from '../ui/Imagen.astro';
+interface Props { id: string }
+const s = seccion(Astro.props.id);
+const trabajos = (s?.trabajos ?? []).filter((t) => t?.titulo || t?.imagen);
+// Columnas (de 12) y filas de cada trabajo en escritorio: 1 grande + 2 al lado; el resto, de 2 en 2 o de 3 en 3.
+function reparto(n: number): { col: number; fil: number }[] {
+  if (n === 1) return [{ col: 12, fil: 1 }];
+  if (n === 2) return [{ col: 7, fil: 1 }, { col: 5, fil: 1 }];
+  const out = [{ col: 7, fil: 2 }, { col: 5, fil: 1 }, { col: 5, fil: 1 }];
+  let resto = n - 3;
+  while (resto > 0) {
+    const fila = resto === 4 ? 2 : Math.min(resto, 3);
+    for (let i = 0; i < fila; i++) out.push({ col: 12 / fila, fil: 1 });
+    resto -= fila;
+  }
+  return out;
+}
+const spans = reparto(trabajos.length);
+---
+
+{
+  s && (s.titulo || s.antetitulo || s.texto || trabajos.length > 0) && (
+    <Banda id={Astro.props.id} color="papel">
+      <Titular antetitulo={s.antetitulo} titulo={s.titulo} texto={s.texto} />
+      {trabajos.length > 0 && (
+        <ul class="trabajos">
+          {trabajos.map((t, i) => {
+            const n = colorDe(t.categoria);
+            const ancho = trabajos.length % 2 === 1 && i === 0;
+            return (
+              <li class:list={['trabajo marco', { 'trabajo--ancho': ancho }]} style={`--col:${spans[i].col};--fil:${spans[i].fil}`}>
+                {t.imagen && (
+                  <div class="foto foto--color">
+                    <Imagen src={t.imagen} alt={t.titulo || s.titulo} ancho={1200} alto={900} />
+                  </div>
+                )}
+                <div class:list={['trabajo-pie ajuste', { [`relleno cat-${n}`]: n > 0 }]}>
+                  {t.titulo && <h3 class="trabajo-titulo encaja" style={`--letras:${letras(t.titulo)}`}>{t.titulo}</h3>}
+                  {(t.lugar || t.categoria) && <p class="trabajo-dato">{[t.lugar, t.categoria].filter(Boolean).join(', ')}</p>}
+                  {t.texto && <p class="trabajo-texto">{t.texto}</p>}
+                </div>
+              </li>
+            );
+          })}
+        </ul>
+      )}
+      {s.cta && (
+        <p class="botones">
+          <a class="btn" href={s.cta.url}>{s.cta.texto}</a>
+        </p>
+      )}
+    </Banda>
+  )
+}

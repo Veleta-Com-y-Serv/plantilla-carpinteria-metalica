@@ -1,0 +1,23 @@
+---
+// Cabeza de sección: antetítulo en letra menuda (caja normal) + título en mayúsculas de Jost + entrada.
+// El título encaja solo en su columna (--letras = letras de su palabra más larga): nunca se parte una palabra.
+// `cabeza`: título a la izquierda y entrada a la derecha en escritorio. Sin campos, no pinta nada.
+import { letras } from '../../data/site';
+interface Props { titulo?: string; antetitulo?: string; texto?: string; class?: string; nivel?: 1 | 2; cabeza?: boolean }
+const { titulo, antetitulo, texto, class: clase = '', nivel = 2, cabeza = true } = Astro.props;
+const H = nivel === 1 ? 'h1' : 'h2';
+---
+
+{
+  (titulo || antetitulo || texto) && (
+    <div class:list={[cabeza ? 'cabeza' : 'titular', { 'cabeza--sola': cabeza && !texto }, clase]}>
+      {antetitulo && <p class="antetitulo">{antetitulo}</p>}
+      {titulo && (
+        <div class="titulo-caja ajuste">
+          <H class="titulo-seccion encaja" style={`--letras:${letras(titulo)}`}>{titulo}</H>
+        </div>
+      )}
+      {texto && <p class="entrada">{texto}</p>}
+    </div>
+  )
+}

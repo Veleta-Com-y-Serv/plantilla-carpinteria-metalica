@@ -1,0 +1,81 @@
+---
+// Portada «Stage»: a la izquierda (5 columnas), antetítulo en letra menuda, titular en mayúsculas de Jost (encaja solo
+// en su columna), una frase, los `items` como datos en celdas con filetes (`titulo` grande, `texto` encima en letra
+// menuda; la plataforma los trata como cifras y no los inventa) y los dos botones: `cta` (tinta) y `cta_secundario`
+// (borde). A la derecha (7 columnas), la foto (`imagen`) enmarcada en blanco y negro y, debajo, la franja con los
+// talleres de la sección `talleres` en sus colores (la firma de la plantilla). En móvil, la foto va después del texto.
+// Sin `imagen`, la portada es solo texto. Sin `cta`, el primer botón llama; sin `cta_secundario`, lleva al contacto.
+import { seccion, site, tel, externo, letras } from '../../data/site';
+import { altHero } from '../../lib/seo';
+import { enlace } from '../../lib/multipagina';
+import Imagen from '../ui/Imagen.astro';
+interface Props { id: string; primera?: boolean }
+const { id, primera = false } = Astro.props;
+const s = seccion(id);
+const c = site.contacto;
+const principal = s?.cta?.url ? s.cta : c.telefono ? { texto: `Llamar al ${c.telefono}`, url: tel(c.telefono) } : null;
+const secundario = s?.cta_secundario?.url
+  ? s.cta_secundario
+  : seccion('contacto')
+    ? { texto: 'Contacto', url: enlace('/#contacto') }
+    : null;
+const datos = (s?.items ?? []).filter((it) => String(it?.titulo ?? '').trim());
+const talleres = (seccion('talleres')?.items ?? []).map((it) => String(it?.titulo ?? '').trim()).filter(Boolean).slice(0, 3);
+const titulo = s?.titulo || site.nombre;
+---
+
+{
+  s && (
+    <section id={id} class="portada">
+      <div class="contenedor">
+        <div class:list={['portada-rejilla', { 'portada-rejilla--foto': s.imagen }]}>
+          <div class="portada-texto ajuste">
+            {s.antetitulo && <p class="antetitulo">{s.antetitulo}</p>}
+            <h1 class="portada-titulo encaja" style={`--letras:${letras(titulo)}`}>{titulo}</h1>
+            {s.texto && <p class="portada-parrafo">{s.texto}</p>}
+            {datos.length > 0 && (
+              <ul class="portada-datos celdas" style={`--n:${datos.length}`}>
+                {datos.map((d) => (
+                  <li>
+                    {d.texto && <span class="menuda">{d.texto}</span>}
+                    <span class="portada-dato">{d.titulo}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
+            {(principal || secundario) && (
+              <div class="botones">
+                {principal && (
+                  <a class="btn" href={principal.url} {...(externo(principal.url) && { rel: 'noopener', target: '_blank' })}>
+                    {principal.texto}
+                  </a>
+                )}
+                {secundario && (
+                  <a class="btn-sec" href={secundario.url} {...(externo(secundario.url) && { rel: 'noopener', target: '_blank' })}>
+                    {secundario.texto}
+                  </a>
+                )}
+              </div>
+            )}
+          </div>
+          {s.imagen && (
+            <figure class="pieza marco">
+              <div class="foto">
+                <Imagen src={s.imagen} alt={altHero()} ancho={1536} alto={1152} prioridad={primera} />
+              </div>
+              {talleres.length > 0 && (
+                <ul class="franja" style={`--n:${talleres.length}`}>
+                  {talleres.map((t, i) => (
+                    <li class={`relleno cat-${i + 1} ajuste`}>
+                      <span class="encaja" style={`--letras:${letras(t)}`}>{t}</span>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </figure>
+          )}
+        </div>
+      </div>
+    </section>
+  )
+}

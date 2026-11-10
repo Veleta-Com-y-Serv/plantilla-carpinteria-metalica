@@ -1,0 +1,40 @@
+---
+// Pide presupuesto: campo del color primario a todo el ancho. A la izquierda, la cabeza, el `texto`, las garantías
+// (`items: [{titulo, texto}]`) en filas con filete y la `nota`. A la derecha, el formulario completo como una hoja de
+// impreso con filetes (nombre, teléfono, localidad, tipo de trabajo con los servicios y mensaje); `boton_formulario`
+// es el texto del botón. Sin email en site.yaml el formulario lo avisa.
+import { seccion } from '../../data/site';
+import Banda from '../ui/Banda.astro';
+import Titular from '../ui/Titular.astro';
+import FormularioContacto from '../ui/FormularioContacto.astro';
+interface Props { id: string }
+const s = seccion(Astro.props.id);
+const garantias = (s?.items ?? []).filter((it) => it?.titulo);
+const boton = (s?.boton_formulario as string) || s?.cta?.texto || 'Pedir presupuesto';
+---
+
+{
+  s && (
+    <Banda id={Astro.props.id} color="campo">
+      <div class="presupuesto-rejilla">
+        <div>
+          <Titular antetitulo={s.antetitulo} titulo={s.titulo} texto={s.texto} cabeza={false} />
+          {garantias.length > 0 && (
+            <ul class="garantias">
+              {garantias.map((g) => (
+                <li>
+                  <strong>{g.titulo}</strong>
+                  {g.texto && <span>{g.texto}</span>}
+                </li>
+              ))}
+            </ul>
+          )}
+          {s.nota && <p class="nota menuda">{s.nota}</p>}
+        </div>
+        <div class="hoja">
+          <FormularioContacto modelo="completo" prefijo={`${Astro.props.id}-f`} boton={boton} />
+        </div>
+      </div>
+    </Banda>
+  )
+}

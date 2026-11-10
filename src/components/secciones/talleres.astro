@@ -1,0 +1,47 @@
+---
+// Los talleres: rejilla codificada a todo el ancho (el «coded grid» del tema). Cada elemento de `items`
+// ({titulo, texto, incluye, imagen}) es una celda encerrada por filetes de 3 px: la foto en blanco y negro, el nombre
+// sobre su color plano (primer taller = primario, segundo = acento, tercero = amarillo derivado; después se repiten)
+// y debajo el texto y lo que incluye («uno; otro; otro», en filas). Ese mismo color marca sus servicios y sus
+// trabajos (campo `categoria` = el título del taller). Sin elementos, solo la cabeza.
+import { seccion, letras, trozos } from '../../data/site';
+import { altFicha } from '../../lib/seo';
+import Banda from '../ui/Banda.astro';
+import Titular from '../ui/Titular.astro';
+import Imagen from '../ui/Imagen.astro';
+interface Props { id: string }
+const s = seccion(Astro.props.id);
+const talleres = (s?.items ?? []).filter((it) => it?.titulo);
+---
+
+{
+  s && (s.titulo || s.antetitulo || s.texto || talleres.length > 0) && (
+    <Banda id={Astro.props.id} color="papel">
+      <Titular antetitulo={s.antetitulo} titulo={s.titulo} texto={s.texto} />
+      {talleres.length > 0 && (
+        <ul class="talleres celdas" style={`--n:${Math.min(talleres.length, 4)}`}>
+          {talleres.map((t, i) => (
+            <li class={`taller cat-${(i % 3) + 1}`}>
+              {t.imagen && (
+                <div class="foto">
+                  <Imagen src={t.imagen} alt={altFicha(t)} ancho={1000} alto={750} />
+                </div>
+              )}
+              <div class="taller-nombre relleno ajuste">
+                <h3 class="encaja" style={`--letras:${letras(t.titulo)}`}>{t.titulo}</h3>
+              </div>
+              <div class="taller-cuerpo">
+                {t.texto && <p class="taller-texto">{t.texto}</p>}
+                {trozos(t.incluye).length > 0 && (
+                  <ul class="taller-lista">
+                    {trozos(t.incluye).map((x) => <li>{x}</li>)}
+                  </ul>
+                )}
+              </div>
+            </li>
+          ))}
+        </ul>
+      )}
+    </Banda>
+  )
+}

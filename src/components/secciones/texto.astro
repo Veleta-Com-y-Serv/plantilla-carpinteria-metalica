@@ -1,0 +1,50 @@
+---
+// Apartado genérico (para apartados nuevos: `tipo: texto`). Cabeza, párrafos de `texto` (líneas en blanco entre
+// párrafos), `imagen` opcional enmarcada en blanco y negro al lado, `items: [{titulo, texto}]` en filas con filete
+// y `cta` opcional. Sin nada más que el título, solo la cabeza.
+import { seccion, parrafos } from '../../data/site';
+import { altSeccion } from '../../lib/seo';
+import Banda from '../ui/Banda.astro';
+import Titular from '../ui/Titular.astro';
+import Imagen from '../ui/Imagen.astro';
+interface Props { id: string }
+const s = seccion(Astro.props.id);
+const items = (s?.items ?? []).filter((it) => it?.titulo);
+---
+
+{
+  s && (s.titulo || s.antetitulo || s.texto || s.imagen || s.cta || items.length > 0) && (
+    <Banda id={Astro.props.id} color="papel">
+      <div class:list={['texto-rejilla', { 'texto-rejilla--foto': s.imagen }]}>
+        <div>
+          <Titular antetitulo={s.antetitulo} titulo={s.titulo} cabeza={false} />
+          {parrafos(s.texto).length > 0 && (
+            <div class="parrafos" style="margin-top:1.5rem">
+              {parrafos(s.texto).map((p) => <p>{p}</p>)}
+            </div>
+          )}
+          {items.length > 0 && (
+            <ul class="lista-filas">
+              {items.map((it) => (
+                <li>
+                  <strong>{it.titulo}</strong>
+                  {it.texto && <span>{it.texto}</span>}
+                </li>
+              ))}
+            </ul>
+          )}
+          {s.cta && (
+            <p class="botones">
+              <a class="btn" href={s.cta.url}>{s.cta.texto}</a>
+            </p>
+          )}
+        </div>
+        {s.imagen && (
+          <div class="foto marco" style="aspect-ratio:4/3">
+            <Imagen src={s.imagen} alt={altSeccion(s)} ancho={1200} alto={900} />
+          </div>
+        )}
+      </div>
+    </Banda>
+  )
+}
